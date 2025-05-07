@@ -1,4 +1,3 @@
-// src/routes/index.tsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 
@@ -11,14 +10,13 @@ import RegisterPage from "../pages/public/RegisterPage";
 import DashboardPage from "../pages/private/DashboardPage";
 import ProfilePage from "../pages/private/ProfilePage";
 
-// Layout
 import MainLayout from "../components/layout/MainLayout";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Rutas públicas dentro del layout principal */}
+        {/* Rutas públicas */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />

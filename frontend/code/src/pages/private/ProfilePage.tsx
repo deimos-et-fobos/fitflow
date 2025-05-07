@@ -1,4 +1,3 @@
-// src/pages/private/ProfilePage.tsx
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -10,16 +9,13 @@ const ProfilePage = () => {
   const [email, setEmail] = useState(user?.email || "");
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Función para simular actualización de perfil
   const handleUpdateProfile = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simular un retraso de actualización
     setTimeout(() => {
       setSuccessMessage("Perfil actualizado correctamente");
       setIsEditing(false);
 
-      // Limpiar mensaje después de 3 segundos
       setTimeout(() => {
         setSuccessMessage("");
       }, 3000);
@@ -27,11 +23,10 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-3xl mx-auto">
+    <section className="container mx-auto px-4 py-8">
+      <article className="max-w-3xl mx-auto">
         <div className="bg-white shadow rounded-lg overflow-hidden">
-          {/* Cabecera del perfil */}
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-16 relative">
+          <header className="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-16 relative">
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
               <div className="h-32 w-32 rounded-full border-4 border-white bg-gray-200 flex items-center justify-center text-gray-500">
                 {user?.photoUrl ? (
@@ -47,9 +42,8 @@ const ProfilePage = () => {
                 )}
               </div>
             </div>
-          </div>
+          </header>
 
-          {/* Contenido del perfil */}
           <div className="px-6 py-12 pt-20">
             {successMessage && (
               <div className="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
@@ -148,7 +142,7 @@ const ProfilePage = () => {
                       Fecha de Registro
                     </h3>
                     <p className="mt-1 text-lg font-medium text-gray-900">
-                      1 de enero de 2024
+                      1 de enero de 2025
                     </p>
                   </div>
                 </div>
@@ -164,73 +158,9 @@ const ProfilePage = () => {
               </div>
             )}
           </div>
-
-          {/* Sección de preferencias */}
-          <div className="border-t border-gray-200 px-6 py-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">
-              Preferencias
-            </h2>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700">
-                    Notificaciones por correo
-                  </h3>
-                  <p className="text-xs text-gray-500">
-                    Recibe notificaciones sobre actualizaciones importantes
-                  </p>
-                </div>
-                <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                  <input
-                    type="checkbox"
-                    id="notificationToggle"
-                    className="sr-only"
-                  />
-                  <label
-                    htmlFor="notificationToggle"
-                    className="block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-                  >
-                    <span className="block h-6 w-6 rounded-full bg-white shadow transform transition-transform duration-200 ease-in-out"></span>
-                  </label>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700">
-                    Modo oscuro
-                  </h3>
-                  <p className="text-xs text-gray-500">
-                    Cambia la apariencia de la aplicación
-                  </p>
-                </div>
-                <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                  <input
-                    type="checkbox"
-                    id="darkModeToggle"
-                    className="sr-only"
-                  />
-                  <label
-                    htmlFor="darkModeToggle"
-                    className="block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-                  >
-                    <span className="block h-6 w-6 rounded-full bg-white shadow transform transition-transform duration-200 ease-in-out"></span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-500">
-            Este es un perfil de demostración. La información mostrada es
-            simulada.
-          </p>
-        </div>
-      </div>
-    </div>
+      </article>
+    </section>
   );
 };
 
