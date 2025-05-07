@@ -84,7 +84,17 @@ class LogoutView(APIView):
 
     @swagger_auto_schema(
         operation_description="Logout",
-        security=[],  # No requiere autenticación
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['refresh'],
+            properties={
+                'refresh': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description='Refresh token para cerrar sesión.',
+                    example='{{refresh_token}}'
+                )
+            }
+        ),
         responses={
             205: openapi.Response(
                 description="Token Blacklisted",
