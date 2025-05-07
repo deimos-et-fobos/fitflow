@@ -26,7 +26,11 @@ const LoginPage = () => {
         );
       }
     } catch (err) {
-      setError("Ocurrió un error durante el inicio de sesión.");
+      setError(
+        err instanceof Error
+          ? `Ocurrió un error: ${err.message}`
+          : "Ocurrió un error durante el inicio de sesión."
+      );
     } finally {
       setIsLoading(false);
     }

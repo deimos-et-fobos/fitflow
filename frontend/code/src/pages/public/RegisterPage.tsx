@@ -58,7 +58,11 @@ const RegisterPage = () => {
         setError("El correo electrónico ya está en uso. Prueba con otro.");
       }
     } catch (err) {
-      setError("Ocurrió un error durante el registro.");
+      setError(
+        err instanceof Error
+          ? `Ocurrió un error: ${err.message}`
+          : "Ocurrió un error durante el registro."
+      );
     } finally {
       setIsLoading(false);
     }
