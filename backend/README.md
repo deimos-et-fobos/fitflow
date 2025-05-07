@@ -17,11 +17,12 @@ Backend de **FitFlow**, una plataforma construida con Django y Django REST Frame
 
 ## 🚀 Cómo levantar el proyecto
 
-### 1. Clona el repositorio
+### 1. Clona el repositorio y cambiar a la rama *development*
 
 ```bash
 git clone https://github.com/deimos-et-fobos/fitflow
 cd fitflow/backend/
+git checkout development
 ```
 
 ### 2. Crea y activa un entorno virtual
