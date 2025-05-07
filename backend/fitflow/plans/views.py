@@ -144,6 +144,21 @@ class PlanDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated, HasAcceptedTerms]
     serializer_class = PlanSerializer
 
+    @swagger_auto_schema(
+        responses={
+            404: openapi.Response(
+                description="Plan no encontrado.",
+                examples={
+                    "application/json": {
+                        "detail": "No Plan matches the given query."
+                    }
+                }
+            )
+        }
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+    
     def get_object(self):
         user = self.request.user
         id = self.kwargs.get('id')  # viene de la URL
