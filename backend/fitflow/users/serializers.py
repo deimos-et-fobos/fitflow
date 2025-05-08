@@ -1,9 +1,9 @@
-from rest_framework import fields, serializers
+from rest_framework import serializers
 from .models import CustomUser, DIETARY_RESTRICTIONS
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class CustomUserSerializer(serializers.ModelSerializer):
-    dietary_restrictions = fields.MultipleChoiceField(choices=DIETARY_RESTRICTIONS, default='')
+    dietary_restrictions = serializers.MultipleChoiceField(choices=DIETARY_RESTRICTIONS, default=list)
 
     class Meta:
         model = CustomUser
@@ -11,21 +11,24 @@ class CustomUserSerializer(serializers.ModelSerializer):
                  'activity_level', 'dietary_restrictions', 'goal', 'accept_terms']
         extra_kwargs = {
             'password': {'write_only': True},
-            'activity_level': {'default': 'sedentary'}, 
-            'goal': {'default': 'maintain_weight'},
-            'accept_terms': {'default': False}    
+            'activity_level': {'default': 'moderate'},  # Alineado con authService.ts
+            'goal': {'default': 'maintain_weight'},     # Alineado con authService.ts
+            'accept_terms': {'default': False},         # Validado por separado
+            'age': {'required': False, 'allow_null': True},
+            'sex': {'required': False, 'allow_null': True},
+            'height_cm': {'required': False, 'allow_null': True},
+            'weight_kg': {'required': False, 'allow_null': True},
+            'dietary_restrictions': {'required': False, 'allow_null': True},
         }
 
     def validate(self, attrs):
-        print(f"Dentro de validate: accept terms = {attrs}")
-        if not attrs.get('accept_terms'):
+        print(f"Dentro de validate: accept_terms = {attrs.get('accept_terms')}")
+        if not attrs.get('accept_terms', False):
             raise serializers.ValidationError({"accept_terms": "Debes aceptar los términos y condiciones."})
         return attrs
 
     def update(self, instance, validated_data):
-        # Eliminar password del diccionario de validated_data para no permitir la actualización
         validated_data.pop('password', None)
-        # Actualizar los demás campos
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
@@ -35,18 +38,17 @@ class CustomUserSerializer(serializers.ModelSerializer):
         user = CustomUser.objects.create_user(
             email=validated_data['email'],
             password=validated_data['password'],
-            name=validated_data['name'],
-            age=validated_data['age'],
-            sex=validated_data['sex'],
-            height_cm=validated_data['height_cm'],
-            weight_kg=validated_data['weight_kg'],
-            activity_level=validated_data['activity_level'],
-            dietary_restrictions=validated_data['dietary_restrictions'],
-            goal=validated_data['goal'],
-            accept_terms=validated_data['accept_terms']
+            name=validated_data.get('name', ''),
+            age=validated_data.get('age', 18),          # Valor por defecto
+            sex=validated_data.get('sex', 'M'),         # Valor por defecto
+            height_cm=validated_data.get('height_cm', 170),  # Valor por defecto
+            weight_kg=validated_data.get('weight_kg', 70),   # Valor por defecto
+            activity_level=validated_data.get('activity_level', 'moderate'),  # Alineado
+            dietary_restrictions=validated_data.get('dietary_restrictions', []),  # Alineado
+            goal=validated_data.get('goal', 'maintain_weight'),  # Alineado
+            accept_terms=validated_data.get('accept_terms', True),  # Alineado
         )
         return user
-    
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
