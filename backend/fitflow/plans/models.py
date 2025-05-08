@@ -6,8 +6,8 @@ class Plan(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now().date())
 
-    class Meta:
-        unique_together = ('user', 'date')
+    # class Meta:
+    #     unique_together = ('user', 'date')
 
 class MealPlan(models.Model):
     plan = models.OneToOneField(Plan, on_delete=models.CASCADE, related_name='meals')

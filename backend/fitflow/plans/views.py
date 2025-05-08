@@ -49,23 +49,57 @@ class PlanCreateViewResponseSerializer(serializers.Serializer):
     class Meta:
         swagger_schema_fields = {
             "example": {
-                'plan': {
-                    'user': 1,
-                    'date': '2025-05-06',
-                    'meals': {
-                        'breakfast': ['Oatmeal with fruits', 'Green tea'],
-                        'lunch': ['Grilled chicken', 'Quinoa', 'Steamed vegetables'],
-                        'dinner': ['Salmon', 'Brown rice', 'Salad'],
-                        'snacks': ['Greek yogurt', 'Handful of nuts']
+                "id": 11,
+                "user": 20,
+                "date": "2025-05-08",
+                "meals": {
+                    "breakfast": {
+                        "08:00": [
+                            "1 taza de avena cocida con leche descremada",
+                            "1 plátano",
+                            "1 cucharada de nueces"
+                        ]
                     },
-                    'exercises': [
-                        {'name': 'Push-ups', 'reps': 10, 'sets': 3},
-                        {'name': 'Squats', 'reps': 15, 'sets': 3},
-                        {'name': 'Plank', 'duration': '30 seconds', 'sets': 3}
-                    ]
+                    "lunch": {
+                        "12:30": [
+                            "150g de pechuga de pollo a la plancha",
+                            "1 taza de brócoli al vapor",
+                            "1/2 taza de quinoa"
+                        ]
+                    },
+                    "snack": {
+                        "16:00": [
+                            "1 yogur natural bajo en grasa",
+                            "1 manzana"
+                        ]
+                    },
+                    "dinner": {
+                        "19:30": [
+                            "200g de pescado al horno",
+                            "1 taza de espinacas salteadas",
+                            "1 batata asada"
+                        ]
+                    }
                 },
-                'bmi': 22.5,
-                'bmi_status': 'Normal weight'
+                "workouts": {
+                    "duration": "60 min",
+                    "warmup": "5-10 minutos de caminata ligera o trotando suavemente",
+                    "exercises": {
+                        "push-up": "10x4",
+                        "sentadillas": "12x3",
+                        "plancha": "30 seg x 3",
+                        "remo con mancuerna": "10x4 (cada brazo)",
+                        "puente": "15x3"
+                    },
+                    "stretching": "5-10 minutos de estiramientos enfocados en brazos, piernas y espalda."
+                },
+                "tips": [
+                    "Mantén una buena hidratación, bebe al menos 2 litros de agua al día.",
+                    "Intenta incorporar al menos 30 minutos de actividad física en tu rutina diaria."
+                ],
+                "progress": None,
+                "bmi": 26.79,
+                "bmi_status": "OK"
             }
         }
 
@@ -94,15 +128,16 @@ class PlanCreateView(generics.CreateAPIView):
         user = request.user
         today = timezone.now().date()
 
+        
+
+        plan = Plan.objects.create(user=user, date=today)
+        # plan, created = Plan.objects.get_or_create(user=user, date=today)
+        # # Si ya existe el plan, no regeneramos todo (esto lo puedes adaptar)
+        # if not created:
+        #     return Response({"detail": "El plan ya existe."}, status=status.HTTP_409_CONFLICT)
+        
         daily_plan = generate_plan(user)
         print(daily_plan)
-        print(daily_plan.keys())
-
-
-        plan, created = Plan.objects.get_or_create(user=user, date=today)
-        # Si ya existe el plan, no regeneramos todo (esto lo puedes adaptar)
-        if not created:
-            return Response({"detail": "El plan ya existe."}, status=status.HTTP_409_CONFLICT)
         
         # BMI (solo para info, no se guarda)
         bmi = user.weight_kg / ((user.height_cm / 100) ** 2)
