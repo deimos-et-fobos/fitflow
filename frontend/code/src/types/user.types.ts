@@ -1,16 +1,14 @@
 export interface User {
-  id: string;
-  name: string;
+  id: number;
   email: string;
-  photoUrl?: string;
-  age?: number;
-  sex?: string;
-  height_cm?: number;
-  weight_kg?: number;
-  activity_level?: string;
+  name: string;
+  age?: number | null;
+  sex?: string | null; // Añadido para coincidir con el backend
+  height_cm?: number | null;
+  weight_kg?: number | null;
+  activity_level?: string | null;
   dietary_restrictions?: string[];
-  goal?: string;
-  accept_terms?: boolean;
+  goal?: string | null;
 }
 
 export interface Plan {

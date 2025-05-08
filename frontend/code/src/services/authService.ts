@@ -3,7 +3,7 @@ import { User } from "../types/user.types";
 
 const API_URL = "http://127.0.0.1:8000/api";
 
-const AUTH_TOKEN_KEY = "auth_token";
+// Eliminado AUTH_TOKEN_KEY porque no se usa
 const USER_DATA_KEY = "user_data";
 
 export const login = async (email: string, password: string): Promise<User | null> => {
@@ -39,19 +39,26 @@ export const register = async (
     goal?: string
 ): Promise<{ success: boolean; message?: string }> => {
     try {
-        const response = await axios.post(`${API_URL}/users/register/`, {
+        const payload: any = {
             email,
             password,
             name,
-            age: age || 18,  // Valor por defecto
-            sex: sex || 'M',  // Valor por defecto
-            height_cm: height_cm || 170,  // Valor por defecto
-            weight_kg: weight_kg || 70,  // Valor por defecto
-            activity_level: activity_level || 'moderate',  // Valor por defecto
-            dietary_restrictions: dietary_restrictions || [],  // Valor por defecto
-            goal: goal || 'maintain_weight',  // Valor por defecto
-            accept_terms: true,  // Campo obligatorio
-        });
+            age: age ?? null,
+            sex: sex ?? null,
+            height_cm: height_cm ?? null,
+            weight_kg: weight_kg ?? null,
+            dietary_restrictions: dietary_restrictions || [],
+            goal: goal || 'maintain_weight',
+            accept_terms: true,
+        };
+
+        // Solo incluir activity_level si tiene un valor válido, de lo contrario dejar que el backend use el valor por defecto
+        if (activity_level) {
+            payload.activity_level = activity_level;
+        }
+
+        console.log("Payload enviado a /register:", payload);
+        const response = await axios.post(`${API_URL}/users/register/`, payload);
         if (response.status === 201) {
             return { success: true };
         }
@@ -86,17 +93,56 @@ export const getAuthToken = (): string | null => {
     return localStorage.getItem('access_token');
 };
 
+// Nueva función para refrescar el token
+const refreshToken = async (): Promise<string | null> => {
+    const refreshToken = localStorage.getItem('refresh_token');
+    if (!refreshToken) return null;
+
+    try {
+        const response = await axios.post(`${API_URL}/users/login/refresh/`, { refresh: refreshToken });
+        const { access } = response.data;
+        localStorage.setItem('access_token', access);
+        return access;
+    } catch (error) {
+        const err = error as any;
+        console.error('Refresh token error:', err.response?.data || err.message);
+        logout();
+        return null;
+    }
+};
+
 export async function getProfile(token: string): Promise<User> {
-    const res = await fetch(`${API_URL}/users/profile/`, {
-        headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) throw new Error("Error al obtener perfil: " + (await res.text()));
-    return await res.json();
+    try {
+        const res = await fetch(`${API_URL}/users/profile/`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) {
+            if (res.status === 401) {
+                const newToken = await refreshToken();
+                if (newToken) {
+                    const retryRes = await fetch(`${API_URL}/users/profile/`, {
+                        headers: { Authorization: `Bearer ${newToken}` },
+                    });
+                    if (!retryRes.ok) throw new Error("Error al obtener perfil después de refrescar token: " + (await retryRes.text()));
+                    const user = await retryRes.json();
+                    localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
+                    return user;
+                }
+            }
+            throw new Error("Error al obtener perfil: " + (await res.text()));
+        }
+        const user = await res.json();
+        localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
+        return user;
+    } catch (error) {
+        const err = error as any;
+        throw err; // Re-lanzar el error con el tipo correcto
+    }
 }
 
 export async function updateProfile(token: string, data: any): Promise<User> {
     const res = await fetch(`${API_URL}/users/profile/`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

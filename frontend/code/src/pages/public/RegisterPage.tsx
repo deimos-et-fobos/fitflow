@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import axios from "axios";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -10,11 +9,10 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const { register } = useAuth();
-
-  const API_URL = "http://127.0.0.1:8000/api";
 
   const validateForm = () => {
     if (!name.trim()) {
@@ -39,6 +37,7 @@ const RegisterPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccessMessage(null);
 
     if (!validateForm()) {
       return;
@@ -47,13 +46,10 @@ const RegisterPage = () => {
     setIsLoading(true);
 
     try {
-      const data = { name, email, password };
-      const response = await axios.post(`${API_URL}/users/register/`, data);
-      const success = response.data.success;
+      const success = await register(email, password, name);
       if (success) {
-        navigate("/login", {
-          state: { message: "Registro exitoso. Por favor inicia sesión." },
-        });
+        setSuccessMessage("Usuario creado exitosamente. Por favor, inicia sesión.");
+        setTimeout(() => navigate("/login"), 2000); // Redirige a login después de 2 segundos
       } else {
         setError("Error al registrar el usuario.");
       }
@@ -167,6 +163,7 @@ const RegisterPage = () => {
           </div>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
+          {successMessage && <p className="text-green-500 text-sm">{successMessage}</p>}
 
           <div>
             <button

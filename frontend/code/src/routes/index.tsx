@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
+import InitialDataPage from "../pages/private/InitialDataPage";
 
 // Páginas públicas
 import HomePage from "../pages/public/HomePage";
@@ -18,29 +19,28 @@ import MainLayout from "../components/layout/MainLayout";
 
 const AppRoutes = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Rutas públicas */}
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+    <Routes>
+      {/* Rutas públicas */}
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
-          {/* Rutas privadas */}
-          <Route element={<PrivateRoute />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/profile/edit" element={<EditProfileForm />} />
-            <Route path="/profile/activity" element={<ActivityHistory />} />
-            <Route path="/profile/health" element={<HealthData />} />
-            <Route path="/comunidad" element={<Comunidad />} />
-          </Route>
-
-          {/* Ruta para manejar URLs no encontradas */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Rutas privadas */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/edit" element={<EditProfileForm />} />
+          <Route path="/profile/activity" element={<ActivityHistory />} />
+          <Route path="/profile/health" element={<HealthData />} />
+          <Route path="/comunidad" element={<Comunidad />} />
+          <Route path="/initial-data" element={<InitialDataPage />} />
         </Route>
-      </Routes>
-    </BrowserRouter>
+
+        {/* Ruta para manejar URLs no encontradas */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
   );
 };
 
