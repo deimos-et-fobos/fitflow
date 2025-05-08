@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
 
 # Cargar las variables de entorno desde el archivo .env
 load_dotenv()
@@ -20,9 +21,10 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+OPENAI_API_KEY1 = os.getenv("OPENAI_API_KEY1", "")
+OPENAI_API_KEY2 = os.getenv("OPENAI_API_KEY2", "")
+OPENAI_API_REGION = os.getenv("OPENAI_API_REGION", "")
+OPENAI_API_URL = os.getenv("OPENAI_API_URL", "")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY", 'django-insecure-hwj)mre0vv-x_ukp#sv!y+u$7=b7c+exxt64oy5$-^2bi4uxsh')
@@ -74,6 +76,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20),
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'BLACKLIST_AFTER_ROTATION': True,
 }
