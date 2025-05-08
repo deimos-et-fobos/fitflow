@@ -16,7 +16,7 @@ from plans.open_AI_service import generate_plan
 from users.permissions import HasAcceptedTerms
 
 class HistoryView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated, HasAcceptedTerms]
+    permission_classes = [IsAuthenticated]
     serializer_class = PlanListSerializer
 
     @swagger_auto_schema(
@@ -70,7 +70,7 @@ class PlanCreateViewResponseSerializer(serializers.Serializer):
         }
 
 class PlanCreateView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated, HasAcceptedTerms]
+    permission_classes = [IsAuthenticated]
     serializer_class = PlanCreateViewResponseSerializer
 
     @swagger_auto_schema(
@@ -100,9 +100,9 @@ class PlanCreateView(generics.CreateAPIView):
 
 
         plan, created = Plan.objects.get_or_create(user=user, date=today)
-        # # Si ya existe el plan, no regeneramos todo (esto lo puedes adaptar)
-        # if not created:
-        #     return Response({"detail": "El plan ya existe."}, status=status.HTTP_409_CONFLICT)
+        # Si ya existe el plan, no regeneramos todo (esto lo puedes adaptar)
+        if not created:
+            return Response({"detail": "El plan ya existe."}, status=status.HTTP_409_CONFLICT)
         
         # BMI (solo para info, no se guarda)
         bmi = user.weight_kg / ((user.height_cm / 100) ** 2)
@@ -141,7 +141,7 @@ class PlanCreateView(generics.CreateAPIView):
 
 
 class PlanDetailView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated, HasAcceptedTerms]
+    permission_classes = [IsAuthenticated]
     serializer_class = PlanSerializer
 
     @swagger_auto_schema(
