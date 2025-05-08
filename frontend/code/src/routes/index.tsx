@@ -9,6 +9,9 @@ import RegisterPage from "../pages/public/RegisterPage";
 // Páginas privadas
 import DashboardPage from "../pages/private/DashboardPage";
 import ProfilePage from "../pages/private/ProfilePage";
+import EditProfileForm from "../pages/private/EditProfileForm";
+import ActivityHistory from "../pages/private/ActivityHistory";
+import HealthData from "../pages/private/HealthData";
 
 import MainLayout from "../components/layout/MainLayout";
 
@@ -26,6 +29,9 @@ const AppRoutes = () => {
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile/edit" element={<EditProfileForm />} />
+            <Route path="/profile/activity" element={<ActivityHistory />} />
+            <Route path="/profile/health" element={<HealthData />} />
           </Route>
 
           {/* Ruta para manejar URLs no encontradas */}

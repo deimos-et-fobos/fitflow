@@ -1,111 +1,108 @@
+import axios from 'axios';
 import { User } from "../types/user.types";
 
-// Usuario mockeado para simular la autenticación
-const MOCK_USER: User = {
-  id: "1",
-  name: "Usuario Ejemplo",
-  email: "usuario@ejemplo.com",
-};
+const API_URL = "http://127.0.0.1:8000/api";
 
-// Credenciales válidas para simular login
-const VALID_CREDENTIALS = {
-  email: "usuario@ejemplo.com",
-  password: "fituser123",
-};
-
-// Clave para almacenar el token en localStorage
 const AUTH_TOKEN_KEY = "auth_token";
 const USER_DATA_KEY = "user_data";
 
-/**
- * Simula un proceso de login
- */
-export const login = async (
-  email: string,
-  password: string
-): Promise<User | null> => {
-  // Simular delay de una petición API
-  await new Promise((resolve) => setTimeout(resolve, 800));
+export const login = async (email: string, password: string): Promise<User | null> => {
+    try {
+        const response = await axios.post(`${API_URL}/users/login/`, { email, password });
+        const { access, refresh } = response.data;
 
-  if (
-    email === VALID_CREDENTIALS.email &&
-    password === VALID_CREDENTIALS.password
-  ) {
-    // Simular token JWT
-    const token = `mock-jwt-token-${Date.now()}`;
-    localStorage.setItem(AUTH_TOKEN_KEY, token);
-    localStorage.setItem(USER_DATA_KEY, JSON.stringify(MOCK_USER));
-    return MOCK_USER;
-  }
+        // Guardar los tokens en localStorage
+        localStorage.setItem('access_token', access);
+        localStorage.setItem('refresh_token', refresh);
 
-  return null;
+        // Obtener el perfil del usuario
+        const user = await getProfile(access);
+        localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
+        return user;
+    } catch (error) {
+        const err = error as any;
+        console.error('Login error:', err.response?.data || err.message);
+        return null;
+    }
 };
 
-/**
- * Simula un proceso de registro
- */
 export const register = async (
-  email: string,
-  password: string,
-  name: string
-): Promise<boolean> => {
-  // Simular delay de una petición API
-  await new Promise((resolve) => setTimeout(resolve, 800));
-
-  // Simular validación de email único
-  if (email === VALID_CREDENTIALS.email) {
-    // El email ya está en uso
-    return false;
-  }
-
-  // En un caso real, aquí guardaríamos el usuario en la base de datos
-  console.log("Usuario registrado:", { email, name });
-  return true;
+    email: string,
+    password: string,
+    name: string,
+    age?: number,
+    sex?: string,
+    height_cm?: number,
+    weight_kg?: number,
+    activity_level?: string,
+    dietary_restrictions?: string[],
+    goal?: string
+): Promise<{ success: boolean; message?: string }> => {
+    try {
+        const response = await axios.post(`${API_URL}/users/register/`, {
+            email,
+            password,
+            name,
+            age: age || 18,  // Valor por defecto
+            sex: sex || 'M',  // Valor por defecto
+            height_cm: height_cm || 170,  // Valor por defecto
+            weight_kg: weight_kg || 70,  // Valor por defecto
+            activity_level: activity_level || 'moderate',  // Valor por defecto
+            dietary_restrictions: dietary_restrictions || [],  // Valor por defecto
+            goal: goal || 'maintain_weight',  // Valor por defecto
+            accept_terms: true,  // Campo obligatorio
+        });
+        if (response.status === 201) {
+            return { success: true };
+        }
+        return { success: false, message: 'Error desconocido al registrar' };
+    } catch (error) {
+        const err = error as any;
+        const errorMessage = err.response?.data?.detail || err.response?.data?.email?.[0] || err.message;
+        console.error('Register error:', err.response?.data || err.message);
+        return { success: false, message: errorMessage || 'Error al registrar usuario' };
+    }
 };
 
-/**
- * Cierra la sesión del usuario
- */
 export const logout = (): void => {
-  localStorage.removeItem(AUTH_TOKEN_KEY);
-  localStorage.removeItem(USER_DATA_KEY);
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem(USER_DATA_KEY);
 };
 
-/**
- * Verifica si el usuario está autenticado
- */
 export const isAuthenticated = (): boolean => {
-  return !!localStorage.getItem(AUTH_TOKEN_KEY);
+    return !!localStorage.getItem('access_token');
 };
 
-/**
- * Obtiene el usuario actual desde localStorage
- */
 export const getCurrentUser = (): User | null => {
-  const userData = localStorage.getItem(USER_DATA_KEY);
-  if (userData) {
-    return JSON.parse(userData);
-  }
-  return null;
+    const userData = localStorage.getItem(USER_DATA_KEY);
+    if (userData) {
+        return JSON.parse(userData);
+    }
+    return null;
 };
 
-/**
- * Obtiene el token de autenticación
- */
 export const getAuthToken = (): string | null => {
-  return localStorage.getItem(AUTH_TOKEN_KEY);
+    return localStorage.getItem('access_token');
 };
 
-// Esta función será útil cuando tengas una API real
-// export const setupAuthInterceptor = (axiosInstance: any) => {
-//   axiosInstance.interceptors.request.use(
-//     (config: any) => {
-//       const token = getAuthToken();
-//       if (token) {
-//         config.headers.Authorization = `Bearer ${token}`;
-//       }
-//       return config;
-//     },
-//     (error: any) => Promise.reject(error)
-//   );
-// };
+export async function getProfile(token: string): Promise<User> {
+    const res = await fetch(`${API_URL}/users/profile/`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error("Error al obtener perfil: " + (await res.text()));
+    return await res.json();
+}
+
+export async function updateProfile(token: string, data: any): Promise<User> {
+    const res = await fetch(`${API_URL}/users/profile/`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error("Error al actualizar perfil: " + (await res.text()));
+    return await res.json();
+}

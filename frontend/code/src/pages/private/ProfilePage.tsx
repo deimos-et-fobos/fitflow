@@ -1,166 +1,87 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import Avatar from "../../components/ui/Avatar";
+import BottomNavBar from "../../components/layout/BottomNavBar";
+
+// Iconos SVG para los accesos rápidos
+const GearIcon = (
+  <svg width="24" height="24" fill="none" stroke="#2ECC71" strokeWidth="2" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+  </svg>
+);
+
+const ActivityIcon = (
+  <svg width="24" height="24" fill="none" stroke="#5DADE2" strokeWidth="2" viewBox="0 0 24 24">
+    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+  </svg>
+);
+
+const HeartIcon = (
+  <svg width="24" height="24" fill="none" stroke="#F39C12" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z" />
+  </svg>
+);
+
+const ArrowRight = (
+  <svg width="24" height="24" fill="none" stroke="#2C3E50" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M9 18l6-6-6-6" />
+  </svg>
+);
 
 const ProfilePage = () => {
   const { user } = useAuth();
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(user?.name || "");
-  const [email, setEmail] = useState(user?.email || "");
-  const [successMessage, setSuccessMessage] = useState("");
-
-  const handleUpdateProfile = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    setTimeout(() => {
-      setSuccessMessage("Perfil actualizado correctamente");
-      setIsEditing(false);
-
-      setTimeout(() => {
-        setSuccessMessage("");
-      }, 3000);
-    }, 800);
-  };
+  const navigate = useNavigate();
 
   return (
-    <section className="container mx-auto px-4 py-8">
-      <article className="max-w-3xl mx-auto">
-        <div className="bg-white shadow rounded-lg overflow-hidden">
-          <header className="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-16 relative">
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
-              <div className="h-32 w-32 rounded-full border-4 border-white bg-gray-200 flex items-center justify-center text-gray-500">
-                {user?.photoUrl ? (
-                  <img
-                    src={user.photoUrl}
-                    alt={user.name}
-                    className="h-full w-full rounded-full object-cover"
-                  />
-                ) : (
-                  <span className="text-4xl font-bold">
-                    {user?.name.charAt(0).toUpperCase()}
-                  </span>
-                )}
-              </div>
-            </div>
-          </header>
+    <main className="min-h-screen bg-[#F9FAFB] pb-24 flex flex-col items-center">
+      {/* Avatar y nombre */}
+      {user && (
+        <section className="flex flex-col items-center mt-10 mb-8 w-full">
+          <Avatar src={user.photoUrl} size={96} />
+          <h2 className="mt-4 text-2xl font-bold text-[#2C3E50]">{user.name}</h2>
+        </section>
+      )}
 
-          <div className="px-6 py-12 pt-20">
-            {successMessage && (
-              <div className="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-                <p>{successMessage}</p>
-              </div>
-            )}
-
-            <div className="text-center mb-8">
-              <h1 className="text-2xl font-bold text-gray-900">{user?.name}</h1>
-              <p className="text-gray-600">{user?.email}</p>
-            </div>
-
-            {isEditing ? (
-              <form onSubmit={handleUpdateProfile} className="space-y-6">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Nombre
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Correo Electrónico
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div className="flex space-x-4">
-                  <button
-                    type="submit"
-                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Guardar Cambios
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsEditing(false)}
-                    className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h3 className="text-sm font-medium text-gray-500">
-                      Nombre
-                    </h3>
-                    <p className="mt-1 text-lg font-medium text-gray-900">
-                      {user?.name}
-                    </p>
-                  </div>
-
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h3 className="text-sm font-medium text-gray-500">
-                      Correo Electrónico
-                    </h3>
-                    <p className="mt-1 text-lg font-medium text-gray-900">
-                      {user?.email}
-                    </p>
-                  </div>
-
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h3 className="text-sm font-medium text-gray-500">
-                      ID de Usuario
-                    </h3>
-                    <p className="mt-1 text-lg font-medium text-gray-900">
-                      {user?.id}
-                    </p>
-                  </div>
-
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h3 className="text-sm font-medium text-gray-500">
-                      Fecha de Registro
-                    </h3>
-                    <p className="mt-1 text-lg font-medium text-gray-900">
-                      1 de enero de 2025
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pt-4">
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Editar Perfil
-                  </button>
-                </div>
-              </div>
-            )}
+      {/* Opciones */}
+      <section className="flex flex-col gap-4 px-4 w-full max-w-md">
+        <button
+          onClick={() => navigate("/profile/edit")}
+          className="flex items-center justify-between w-full bg-white rounded-2xl shadow p-4 hover:bg-[#E8F8F5] transition-colors border border-gray-100"
+        >
+          <div className="flex items-center gap-4">
+            {GearIcon}
+            <span className="text-lg font-medium text-[#2C3E50]">Configuración</span>
           </div>
-        </div>
-      </article>
-    </section>
+          {ArrowRight}
+        </button>
+        <button
+          onClick={() => navigate("/profile/activity")}
+          className="flex items-center justify-between w-full bg-white rounded-2xl shadow p-4 hover:bg-[#E8F8F5] transition-colors border border-gray-100"
+        >
+          <div className="flex items-center gap-4">
+            {ActivityIcon}
+            <span className="text-lg font-medium text-[#2C3E50]">Historial de actividad</span>
+          </div>
+          {ArrowRight}
+        </button>
+        <button
+          onClick={() => navigate("/profile/health")}
+          className="flex items-center justify-between w-full bg-white rounded-2xl shadow p-4 hover:bg-[#E8F8F5] transition-colors border border-gray-100"
+        >
+          <div className="flex items-center gap-4">
+            {HeartIcon}
+            <span className="text-lg font-medium text-[#2C3E50]">Datos de salud</span>
+          </div>
+          {ArrowRight}
+        </button>
+      </section>
+
+      {/* Solo una barra de navegación */}
+      <div className="w-full fixed bottom-0 left-0 right-0 z-50">
+        <BottomNavBar />
+      </div>
+    </main>
   );
 };
 
