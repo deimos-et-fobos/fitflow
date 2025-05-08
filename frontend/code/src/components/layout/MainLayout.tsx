@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Logo from "../../assets/logo.png";
 import { ChevronDownIcon } from "../ui/Icons";
+import BottomNavBar from "./BottomNavBar";
 
 const MainLayout = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -136,9 +137,11 @@ const MainLayout = () => {
         </article>
       </header>
 
-      <main className="flex-grow">
+      <main className="flex-1">
         <Outlet />
       </main>
+
+      {isAuthenticated && <BottomNavBar />}
 
       <footer className="bg-white border-t border-gray-200">
         <article className="max-w-7xl mx-auto py-6 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">

@@ -12,6 +12,7 @@ import ProfilePage from "../pages/private/ProfilePage";
 import EditProfileForm from "../pages/private/EditProfileForm";
 import ActivityHistory from "../pages/private/ActivityHistory";
 import HealthData from "../pages/private/HealthData";
+import Comunidad from "../pages/private/Comunidad";
 
 import MainLayout from "../components/layout/MainLayout";
 
@@ -32,6 +33,7 @@ const AppRoutes = () => {
             <Route path="/profile/edit" element={<EditProfileForm />} />
             <Route path="/profile/activity" element={<ActivityHistory />} />
             <Route path="/profile/health" element={<HealthData />} />
+            <Route path="/comunidad" element={<Comunidad />} />
           </Route>
 
           {/* Ruta para manejar URLs no encontradas */}

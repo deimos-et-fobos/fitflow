@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -8,38 +9,36 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const { register } = useAuth();
+
+  const API_URL = "http://127.0.0.1:8000/api";
 
   const validateForm = () => {
     if (!name.trim()) {
       setError("El nombre es obligatorio");
       return false;
     }
-
     if (!email.trim()) {
       setError("El correo electrónico es obligatorio");
       return false;
     }
-
     if (password.length < 6) {
       setError("La contraseña debe tener al menos 6 caracteres");
       return false;
     }
-
     if (password !== confirmPassword) {
       setError("Las contraseñas no coinciden");
       return false;
     }
-
     return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setError(null);
 
     if (!validateForm()) {
       return;
@@ -48,14 +47,15 @@ const RegisterPage = () => {
     setIsLoading(true);
 
     try {
-      const success = await register(email, password, name);
+      const data = { name, email, password };
+      const response = await axios.post(`${API_URL}/users/register/`, data);
+      const success = response.data.success;
       if (success) {
-        // Registro exitoso, redirigir a login
         navigate("/login", {
           state: { message: "Registro exitoso. Por favor inicia sesión." },
         });
       } else {
-        setError("El correo electrónico ya está en uso. Prueba con otro.");
+        setError("Error al registrar el usuario.");
       }
     } catch (err) {
       setError(
@@ -192,12 +192,8 @@ const RegisterPage = () => {
         <div className="mt-4 p-3 bg-gray-50 rounded-md border border-gray-200">
           <p className="text-sm text-gray-700">
             <strong>Nota:</strong> Este es un sistema de registro para
-            propósitos de demostración, puedes crear cualquier cuenta, pero
-            recuerda que solo el usuario de ejemplo puede iniciar sesión:
-            <br />
-            Email: usuario@ejemplo.com
-            <br />
-            Password: fituser123
+            propósitos de demostración. Puedes crear cualquier cuenta y
+            usarla para iniciar sesión.
           </p>
         </div>
       </div>
