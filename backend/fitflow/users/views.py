@@ -9,22 +9,21 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-
 class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
 
     @swagger_auto_schema(
-        operation_description="Login y obtención de tokens JWT",
+        operation_description="Registro de un nuevo usuario",
         security=[],  # No requiere autenticación
         responses={
             400: openapi.Response(
                 description="Bad Request",
                 examples={
                     "application/json": {
-                        "field_1": ["Field 1 erros ...", "..."],
-                        "field_2": ["Field 2 erros ...", "..."],
+                        "field_1": ["Field 1 errors ...", "..."],
+                        "field_2": ["Field 2 errors ...", "..."],
                         "accept_terms": ["Debes aceptar los términos y condiciones."]
                     }
                 }
@@ -32,8 +31,13 @@ class RegisterView(generics.CreateAPIView):
         }
     )
     def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
-
+        print(f"Datos recibidos en RegisterView: {request.data}")
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(f"Errores de serialización: {serializer.errors}")  # Añadido para depurar
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
@@ -77,7 +81,6 @@ class ProfileView(generics.RetrieveUpdateAPIView):
             {"detail": "Método PUT no permitido. Usá PATCH para actualizaciones parciales."},
             status=status.HTTP_405_METHOD_NOT_ALLOWED
         )
-
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]

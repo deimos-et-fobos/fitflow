@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta  # Importado para configurar SIMPLE_JWT
 
 # Cargar las variables de entorno desde el archivo .env
 load_dotenv()
@@ -20,19 +21,19 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY", 'django-insecure-hwj)mre0vv-x_ukp#sv!y+u$7=b7c+exxt64oy5$-^2bi4uxsh')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", True)
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 if ENVIRONMENT == 'production':
     DEBUG = False
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1, localhost").split(",")
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 # Application definition
 
@@ -52,7 +53,7 @@ INSTALLED_APPS = [
     'drf_yasg',  # Swagger docs
     'corsheaders',  # Añadido para soporte CORS
 
-    # own apps
+    # Own apps
     'users',
     'plans',
     'progress'
@@ -72,12 +73,26 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',  # Por defecto, requiere autenticación
+    ),
 }
 
+# Configuración de SIMPLE_JWT
 SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # Duración del access token
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Duración del refresh token
+    'ROTATE_REFRESH_TOKENS': True,                 # Rotar refresh tokens al refrescar
+    'BLACKLIST_AFTER_ROTATION': True,              # Blacklist de tokens antiguos
+    'UPDATE_LAST_LOGIN': False,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'BLACKLIST_AFTER_ROTATION': True,
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -112,7 +127,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'fitflow.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -135,7 +149,6 @@ else:
         }
     }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -154,7 +167,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -166,11 +178,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Para producción
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -198,3 +210,14 @@ CORS_ALLOW_HEADERS = [
     'content-type',
     'x-csrftoken',
 ]
+
+# Configuraciones de seguridad para producción
+if ENVIRONMENT == 'production':
+    SECURE_SSL_REDIRECT = True  # Redirigir HTTP a HTTPS
+    SESSION_COOKIE_SECURE = True  # Cookies solo por HTTPS
+    CSRF_COOKIE_SECURE = True  # Cookies CSRF solo por HTTPS
+    SECURE_BROWSER_XSS_FILTER = True  # Protección contra XSS
+    SECURE_CONTENT_TYPE_NOSNIFF = True  # Evitar que el navegador interprete mal los tipos de contenido
+    SECURE_HSTS_SECONDS = 31536000  # HSTS por 1 año
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True

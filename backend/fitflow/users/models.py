@@ -57,23 +57,21 @@ class CustomUserManager(BaseUserManager):
     
 
 class CustomUser(AbstractUser):
-    username=None
-    name = models.CharField(max_length=100)
+    username = None
+    name = models.CharField(max_length=100, blank=True)
     email = models.EmailField(unique=True)
-    age = models.IntegerField(validators=[MinValueValidator(16)])
-    sex = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female')])
-    height_cm = models.FloatField(validators=[MinValueValidator(0)])
-    weight_kg = models.FloatField(validators=[MinValueValidator(0)])
+    age = models.IntegerField(validators=[MinValueValidator(16)], null=True, blank=True)
+    sex = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female')], null=True, blank=True)
+    height_cm = models.FloatField(validators=[MinValueValidator(0)], null=True, blank=True)
+    weight_kg = models.FloatField(validators=[MinValueValidator(0)], null=True, blank=True)
     activity_level = models.CharField(max_length=30, choices=ACTIVITY_LEVELS, default="sedentary")
-    dietary_restrictions = MultiSelectField(choices=DIETARY_RESTRICTIONS, default="")
+    dietary_restrictions = MultiSelectField(choices=DIETARY_RESTRICTIONS, default=list, blank=True)
     goal = models.CharField(max_length=30, choices=GOALS, default="maintain_weight")
-    accept_terms = models.BooleanField(default=False)
-    
+
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'age', 'height_cm', 'weight_kg']
+    REQUIRED_FIELDS = ['name']
 
     objects = CustomUserManager()
 
     def __str__(self):
         return self.email
-
