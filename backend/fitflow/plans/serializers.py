@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from plans.models import Plan, MealPlan, WorkoutPlan
+from plans.models import Plan, MealPlan, WorkoutPlan, TipsPlan
 from progress.serializers import DailyProgressSerializer
 
 
@@ -11,17 +11,42 @@ class MealPlanSerializer(serializers.ModelSerializer):
 class WorkoutPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkoutPlan
-        fields = ['id', 'exercises']
+        fields = ['id', 'workouts']
+
+class TipsPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TipsPlan
+        fields = ['id', 'tips']
 
 
 class PlanSerializer(serializers.ModelSerializer):
-    meal_plan = MealPlanSerializer(read_only=True)
-    workout_plan = WorkoutPlanSerializer(read_only=True)
+    meals = serializers.SerializerMethodField()
+    workouts = serializers.SerializerMethodField()
+    tips = serializers.SerializerMethodField()
     progress = DailyProgressSerializer(read_only=True)
 
     class Meta:
         model = Plan
-        fields = ['id', 'user', 'date', 'meal_plan', 'workout_plan', 'progress']
+        fields = ['id', 'user', 'date', 'meals', 'workouts', 'tips', 'progress']
+
+    def get_meals(self, obj):
+        if hasattr(obj, 'meals') and obj.meals:
+            return obj.meals.meals
+        return None
+    
+    def get_workouts(self, obj):
+        if hasattr(obj, 'workouts') and obj.workouts:
+            return obj.workouts.workouts 
+        return None
+    
+    def get_tips(self, obj):
+        if hasattr(obj, 'tips') and obj.tips:
+            return obj.tips.tips 
+        return None
+
+    class Meta:
+        model = Plan
+        fields = ['id', 'user', 'date', 'meals', 'workouts', 'tips', 'progress']
         read_only_fields = ['user']  # se puede setear automáticamente en la view
 
 

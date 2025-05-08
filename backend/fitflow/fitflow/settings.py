@@ -21,8 +21,10 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+OPENAI_API_KEY1 = os.getenv("OPENAI_API_KEY1", "")
+OPENAI_API_KEY2 = os.getenv("OPENAI_API_KEY2", "")
+OPENAI_API_REGION = os.getenv("OPENAI_API_REGION", "")
+OPENAI_API_URL = os.getenv("OPENAI_API_URL", "")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY", 'django-insecure-hwj)mre0vv-x_ukp#sv!y+u$7=b7c+exxt64oy5$-^2bi4uxsh')
@@ -92,7 +94,8 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20),
+    # 'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'

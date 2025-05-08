@@ -10,10 +10,14 @@ class Plan(models.Model):
         unique_together = ('user', 'date')
 
 class MealPlan(models.Model):
-    plan = models.OneToOneField(Plan, on_delete=models.CASCADE, related_name='meal_plan')
+    plan = models.OneToOneField(Plan, on_delete=models.CASCADE, related_name='meals')
     meals = models.JSONField()
 
 class WorkoutPlan(models.Model):
-    plan = models.OneToOneField(Plan, on_delete=models.CASCADE, related_name='workout_plan')
-    exercises = models.JSONField()
+    plan = models.OneToOneField(Plan, on_delete=models.CASCADE, related_name='workouts')
+    workouts = models.JSONField()
+
+class TipsPlan(models.Model):
+    plan = models.OneToOneField(Plan, on_delete=models.CASCADE, related_name='tips')
+    tips = models.JSONField()
 
