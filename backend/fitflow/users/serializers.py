@@ -1,3 +1,4 @@
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from .models import CustomUser, DIETARY_RESTRICTIONS
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -22,11 +23,21 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'weight_kg': {'required': False, 'allow_null': True},
             'dietary_restrictions': {'required': False, 'allow_null': True},
         }
-
+    
     def validate(self, attrs):
-        # Solo validar accept_terms si es un registro (create)
-        if self.context['request'].method == 'POST' and not attrs.get('accept_terms', False):
-            raise serializers.ValidationError({"accept_terms": "Debes aceptar los términos y condiciones."})
+        request = self.context.get('request')
+        
+        # Validar términos solo en creación
+        if request and request.method == 'POST':
+            # Solo validar accept_terms si es un registro (create)
+            if not attrs.get('accept_terms', False):
+                raise serializers.ValidationError({"accept_terms": "Debes aceptar los términos y condiciones."})
+
+            # Validar contraseña solo al crear
+            password = attrs.get('password')
+            if password:
+                validate_password(password)
+
         return attrs
 
     def update(self, instance, validated_data):

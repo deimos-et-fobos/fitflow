@@ -100,6 +100,21 @@ SIMPLE_JWT = {
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
+AUTH_PASSWORD_VALIDATORS = [
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    # },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 6,  # o lo que vos quieras
+        }
+    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    # },
+]
+
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,  # Desactiva la autenticación por sesión (cookies)
     'SECURITY_DEFINITIONS': {

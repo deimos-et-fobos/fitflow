@@ -30,14 +30,19 @@ class RegisterView(generics.CreateAPIView):
             )
         }
     )
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         print(f"Datos recibidos en RegisterView: {request.data}")
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            self.perform_create(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(f"Errores de serialización: {serializer.errors}")  # Añadido para depurar
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = CustomUserSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        
+        refresh = RefreshToken.for_user(user)
+
+        return Response({
+            'user': serializer.data,
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }, status=status.HTTP_201_CREATED)
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer

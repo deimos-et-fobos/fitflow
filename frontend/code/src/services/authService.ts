@@ -60,6 +60,15 @@ export const register = async (
         console.log("Payload enviado a /register:", payload);
         const response = await axios.post(`${API_URL}/users/register/`, payload);
         if (response.status === 201) {
+            // const { access, refresh } = response.data;
+
+            // // Guardar los tokens en localStorage
+            // localStorage.setItem('access_token', access);
+            // localStorage.setItem('refresh_token', refresh);
+
+            // // Obtener el perfil del usuario
+            // const user = await getProfile(access);
+            // localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
             return { success: true };
         }
         return { success: false, message: 'Error desconocido al registrar' };
