@@ -17,7 +17,7 @@ from users.permissions import HasAcceptedTerms
 
 class HistoryView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = PlanListSerializer
+    serializer_class = PlanSerializer
 
     @swagger_auto_schema(
         operation_description="Login y obtención de tokens JWT",
