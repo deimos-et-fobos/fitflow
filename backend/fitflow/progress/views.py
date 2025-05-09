@@ -1,72 +1,10 @@
-from django.shortcuts import get_object_or_404
-
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
 
-from plans.models import Plan
-from progress.models import DailyProgress, PlanChange
-from progress.serializers import DailyProgressSerializer, PlanChangeSerializer
-
-class FeedbackDetailView(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = DailyProgressSerializer
-
-    def get_object(self):
-        user = self.request.user
-        plan_id = self.kwargs.get("plan_id")
-        plan = get_object_or_404(Plan, id=plan_id, user=user)
-        return get_object_or_404(DailyProgress, plan=plan)
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        # Si actualiza el peso, actualizamos también el del usuario
-        weight_kg = request.data.get('weight_kg')
-        if weight_kg:
-            request.user.weight_kg = weight_kg
-            request.user.save()
-
-        return Response(serializer.data)
-
-    @swagger_auto_schema(auto_schema=None)
-    def put(self, request, *args, **kwargs):
-        return Response(
-            {"detail": "Método PUT no permitido. Usá PATCH para actualizaciones parciales."},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED
-        )
-    
-
-# class FeedbackCreateView(generics.CreateAPIView):
-#     permission_classes = [IsAuthenticated]
-#     serializer_class = DailyProgressSerializer
-
-#     def create(self, request, *args, **kwargs):
-#         user = request.user
-#         data = request.data.copy()
-
-#         plan = Plan.objects.filter(id=data.get('plan'), user=user).first()
-#         if not plan:
-#             return Response({"error": "No existe un plan para esa fecha."}, status=400)
-        
-#         if DailyProgress.objects.filter(plan=plan).exists():
-#             return Response({"error": "Ya existe feedback para esa fecha."}, status=400)
-
-#         serializer = self.get_serializer(data=data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-
-#         # Si actualiza el peso, actualizamos también el del usuario
-#         if 'weight_kg' in data:
-#             request.user.weight_kg = data['weight_kg']
-#             request.user.save()
-
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
+from progress.models import PlanChange
+from progress.serializers import PlanChangeSerializer
 
 
 class PlanChangeView(generics.CreateAPIView):

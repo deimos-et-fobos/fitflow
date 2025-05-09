@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import DailyProgress, PlanChange
+from .models import PlanChange
 
 # Register your models here.
-admin.site.register(DailyProgress)
 admin.site.register(PlanChange)

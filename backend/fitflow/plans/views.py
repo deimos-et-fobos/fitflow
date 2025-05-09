@@ -4,17 +4,14 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
 from rest_framework import generics, status, serializers
-from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from progress.models import DailyProgress
-from plans.models import Plan, MealPlan, WorkoutPlan, TipsPlan
-from plans.serializers import PlanSerializer, PlanListSerializer
+from plans.models import Plan, MealPlan, WorkoutPlan, TipsPlan, DailyProgress
+from plans.serializers import PlanSerializer, DailyProgressSerializer
 from plans.open_AI_service import generate_plan
-from users.permissions import HasAcceptedTerms
 
 class HistoryView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -199,3 +196,35 @@ class PlanDetailView(generics.RetrieveAPIView):
         user = self.request.user
         id = self.kwargs.get('id')  # viene de la URL
         return get_object_or_404(Plan, user=user, id=id)
+
+
+class FeedbackDetailView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = DailyProgressSerializer
+
+    def get_object(self):
+        user = self.request.user
+        id = self.kwargs.get("id")
+        plan = get_object_or_404(Plan, id=id, user=user)
+        return get_object_or_404(DailyProgress, plan=plan)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        # Si actualiza el peso, actualizamos también el del usuario
+        weight_kg = request.data.get('weight_kg')
+        if weight_kg:
+            request.user.weight_kg = weight_kg
+            request.user.save()
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(auto_schema=None)
+    def put(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Método PUT no permitido. Usá PATCH para actualizaciones parciales."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
