@@ -18,6 +18,23 @@ export interface Plan {
   meal_plan: { meals: any };
   workout_plan: { exercises: any };
   progress?: DailyProgress;
+  meals?: {
+    [key: string]: {
+      [key: string]: string[];
+    };
+  };
+  workouts?: {
+    duration: string;
+    warmup: string;
+    exercises: {
+      [key: string]: string;
+    };
+    stretching: string;
+    calories?: string;
+  };
+  tips?: string[];
+  bmi?: number;
+  bmi_status?: string;
 }
 
 export interface DailyProgress {
@@ -45,4 +62,13 @@ export interface RegisterData extends LoginCredentials {
   activity_level?: string;
   dietary_restrictions?: string[];
   goal?: string;
+}
+
+export interface RecentActivity {
+  type: string;
+  name: string;
+  duration?: string;
+  calories?: string;
+  value?: string;
+  time: string;
 }

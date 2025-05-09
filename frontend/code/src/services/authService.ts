@@ -52,7 +52,6 @@ export const register = async (
             accept_terms: true,
         };
 
-        // Solo incluir activity_level si tiene un valor válido, de lo contrario dejar que el backend use el valor por defecto
         if (activity_level) {
             payload.activity_level = activity_level;
         }
@@ -60,12 +59,6 @@ export const register = async (
         console.log("Payload enviado a /register:", payload);
         const response = await axios.post(`${API_URL}/users/register/`, payload);
         if (response.status === 201) {
-            // const { user, access, refresh } = response.data;
-
-            // // Guardar los tokens en localStorage
-            // localStorage.setItem('access_token', access);
-            // localStorage.setItem('refresh_token', refresh);
-            // localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
             return { success: true };
         }
         return { success: false, message: 'Error desconocido al registrar' };
