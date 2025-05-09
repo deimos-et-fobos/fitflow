@@ -1,42 +1,45 @@
-FROM node:18 AS frontend
-
-WORKDIR /app
-
-COPY /frontend/code/package*.json ./code/
-RUN npm install --prefix ./code
-
-COPY /frontend/code/ ./code/
-
-EXPOSE 5173
-
-CMD ["npm", "run", "dev-host", "--prefix", "./code"]
-
-
 FROM python:3.12-slim
-    
+
+# -----------------------------------
+# Etapa 1: Configuración del sistema
+# -----------------------------------
 WORKDIR /app
 
-# Dependencias del sistema
+# Instalar dependencias del sistema y Node.js (v18)
 RUN apt-get update && apt-get install -y \
-    libpq-dev \
+    curl \
+    gnupg \
     build-essential \
+    libpq-dev \
+    ca-certificates \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Dependencias de Python
+# -----------------------------------
+# Etapa 2: Backend - Python
+# -----------------------------------
 COPY ./backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar backend
-COPY ./backend /app
+COPY ./backend/fitflow /app
+COPY .env /app
 
-COPY .env .env
+# -----------------------------------
+# Etapa 3: Frontend - Node.js
+# -----------------------------------
+COPY frontend/code/package*.json ./frontend/
+RUN npm install --prefix ./frontend
 
-# Copiar el frontend compilado desde la etapa anterior
-COPY --from=frontend /app/code/dist /app/frontend-dist
+COPY frontend/code/ ./frontend/
 
-EXPOSE 8000
+# -----------------------------------
+# Script que inicia ambos servicios
+# -----------------------------------
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
-# Ejecutar el servidor de backend
-CMD bash -c "python manage.py collectstatic --noinput && \
-             python manage.py migrate && \
-             gunicorn fitflow.wsgi:application --bind 0.0.0.0:8000"
+EXPOSE 5173
+
+CMD ["/start.sh"]

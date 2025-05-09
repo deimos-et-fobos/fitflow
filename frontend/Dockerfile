@@ -2,10 +2,10 @@ FROM node:18
 
 WORKDIR /app
 
-COPY code/package*.json ./code/
+COPY frontend/code/package*.json ./code/
 RUN npm install --prefix ./code
 
-COPY code/ ./code/
+COPY frontend/code/ ./code/
 
 EXPOSE 5173
 
