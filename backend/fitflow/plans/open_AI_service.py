@@ -38,7 +38,7 @@ def create_prompt(user):
             "history": {progress_data}
         }}
 
-        Usá la información del perfil y progreso diario del usuario para generar una recomendación diaria de alimentación y ejercicios. 
+        Usá la información del perfil y el historial del usuario para generar una recomendación diaria de alimentación y ejercicios. 
         Adaptá el contenido para ayudar a alcanzar el objetivo ("goal"). Hacela variada porque me solés dar siempre las mismas respuestas. 
         Respondé en este formato: 
 
@@ -129,7 +129,7 @@ def generate_plan(user):
             {"role": "developer", "content": "Eres un entrenador personal."},
             {"role": "user", "content": prompt}
         ],
-        max_completion_tokens = 5000,
+        max_completion_tokens = 2000,
     )
     
     print(response.model_dump_json(indent=2))
