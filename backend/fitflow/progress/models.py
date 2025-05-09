@@ -16,7 +16,7 @@ class DailyProgress(models.Model):
     weight_kg = models.FloatField(null=True, blank=True, validators=[MinValueValidator(0)])
     bmi = models.FloatField(null=True, blank=True, validators=[MinValueValidator(0)])
     mood = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(5)])
-    feedback = models.CharField(blank=True, default='', max_length=200)
+    feedback = models.CharField(null=True, blank=True, max_length=100)
 
 class PlanChange(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

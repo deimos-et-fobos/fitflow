@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from progress.models import DailyProgress
 from plans.models import Plan, MealPlan, WorkoutPlan, TipsPlan
 from plans.serializers import PlanSerializer, PlanListSerializer
 from plans.open_AI_service import generate_plan
@@ -147,11 +148,11 @@ class PlanCreateView(generics.CreateAPIView):
                 MealPlan.objects.create(plan=plan, meals=daily_plan.get('meals'))
                 WorkoutPlan.objects.create(plan=plan, workouts=daily_plan.get('workouts'))
                 TipsPlan.objects.create(plan=plan, tips=daily_plan.get('tips'))
+                DailyProgress.objects.create(plan=plan)
         except Exception as e:
             plan.delete()  # Limpieza si falló algo después del get_or_create
             return Response({"detail": f"Error al crear el plan: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # DailyProgress.objects.create(plan=plan)   
         plan_data = PlanSerializer(plan).data
 
         return Response({
