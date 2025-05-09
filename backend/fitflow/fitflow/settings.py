@@ -36,7 +36,7 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 if ENVIRONMENT == 'production':
     DEBUG = False
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost,0.0.0.0").split(",")
 
 # Application definition
 
@@ -64,6 +64,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',  # Añadido y movido antes de CommonMiddleware
     'django.middleware.common.CommonMiddleware',
@@ -129,10 +130,11 @@ SWAGGER_SETTINGS = {
 
 ROOT_URLCONF = 'fitflow.urls'
 
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -177,12 +179,13 @@ else:
             }
         }
 
+print(DATABASES)
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Argentina/Buenos_Aires'
 
 USE_I18N = True
 
@@ -192,7 +195,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Para producción
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -222,12 +226,12 @@ CORS_ALLOW_HEADERS = [
 ]
 
 # Configuraciones de seguridad para producción
-if ENVIRONMENT == 'production':
-    SECURE_SSL_REDIRECT = True  # Redirigir HTTP a HTTPS
-    SESSION_COOKIE_SECURE = True  # Cookies solo por HTTPS
-    CSRF_COOKIE_SECURE = True  # Cookies CSRF solo por HTTPS
-    SECURE_BROWSER_XSS_FILTER = True  # Protección contra XSS
-    SECURE_CONTENT_TYPE_NOSNIFF = True  # Evitar que el navegador interprete mal los tipos de contenido
-    SECURE_HSTS_SECONDS = 31536000  # HSTS por 1 año
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+# if ENVIRONMENT == 'production':
+#     # SECURE_SSL_REDIRECT = True  # Redirigir HTTP a HTTPS
+#     # SESSION_COOKIE_SECURE = True  # Cookies solo por HTTPS
+#     # CSRF_COOKIE_SECURE = True  # Cookies CSRF solo por HTTPS
+#     SECURE_BROWSER_XSS_FILTER = True  # Protección contra XSS
+#     SECURE_CONTENT_TYPE_NOSNIFF = True  # Evitar que el navegador interprete mal los tipos de contenido
+#     SECURE_HSTS_SECONDS = 31536000  # HSTS por 1 año
+#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#     SECURE_HSTS_PRELOAD = True
