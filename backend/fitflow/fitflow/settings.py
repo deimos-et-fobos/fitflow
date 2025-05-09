@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta  # Importado para configurar SIMPLE_JWT
@@ -160,12 +161,21 @@ if ENVIRONMENT == 'production':
         }
     }
 else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+    POSTGRES_REMOTE = os.getenv('POSTGRES_REMOTE', False)
+    if POSTGRES_REMOTE == 'True':
+        POSTGRES_URL = os.getenv('POSTGRES_URL', 'URL not provided!')
+        print(f'Using remote database URL: {POSTGRES_URL}')
+        DATABASES = {
+            'default': dj_database_url.config(default=POSTGRES_URL)
         }
-    }
+    else:
+        print(f'Using local SQLite3')
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
