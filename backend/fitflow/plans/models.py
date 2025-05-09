@@ -4,9 +4,10 @@ from django.utils import timezone
 
 class Plan(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    date = models.DateField(default=timezone.now().date())
+    date = models.DateField(default=timezone.now) 
 
-    # class Meta:
+    class Meta:
+        ordering = ['-date']
     #     unique_together = ('user', 'date')
 
 class MealPlan(models.Model):

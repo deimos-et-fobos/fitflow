@@ -72,10 +72,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           navigate("/login");
         }
       } else {
-        if (
-          window.location.pathname !== "/login" &&
-          window.location.pathname !== "/register"
-        ) {
+        // Solo redirigir a login si no está en una ruta pública
+        const publicRoutes = ["/", "/login", "/register"];
+        if (!publicRoutes.includes(window.location.pathname)) {
           navigate("/login");
         }
       }
