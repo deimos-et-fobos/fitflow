@@ -1,4 +1,4 @@
-import Mission1 from "../../assets/mission1.jpg";
+import Mission1 from "../../assets/mission1.webp";
 import Mission2 from "../../assets/mission2.webp";
 import Mission3 from "../../assets/mission3.webp";
 function MissionBanner() {

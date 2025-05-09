@@ -76,9 +76,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           window.location.pathname !== "/login" &&
           window.location.pathname !== "/register"
         ) {
-          // TODO descomentar /login y eliminar /
-          // navigate("/login");
-          navigate("/");
+          navigate("/login");
         }
       }
       setIsLoading(false);

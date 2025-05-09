@@ -2,13 +2,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperType } from "swiper";
 import { A11y, Navigation, Pagination } from "swiper/modules";
 import { useRef } from "react";
-import Slider1 from "../../assets/slider1.jpg";
-import Slider2 from "../../assets/slider2.jpg";
-import Slider3 from "../../assets/slider3.jpg";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import Slider4 from "../../assets/slider4.jpg";
-import Slider5 from "../../assets/slider5.jpg";
-import Slider6 from "../../assets/slider6.jpg";
+import Slider1 from "../../assets/slider1.webp";
+import Slider2 from "../../assets/slider2.webp";
+import Slider3 from "../../assets/slider3.webp";
+import Slider4 from "../../assets/slider4.webp";
+import Slider5 from "../../assets/slider5.webp";
+import Slider6 from "../../assets/slider6.webp";
 
 function SliderSection() {
   const swiperRef = useRef<SwiperType | null>(null);

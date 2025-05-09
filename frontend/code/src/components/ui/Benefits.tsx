@@ -1,15 +1,15 @@
 import { AppleIcon, BicepsIcon, DumbbellIcon } from "./Icons";
-import BenefitsImg from "../../assets/benefits.jpg";
+import BenefitsImg from "../../assets/benefits.webp";
 
 function Benefits() {
   return (
     <section className="py-12">
       <article className="w-10/12 mx-auto">
-        <header className="flex justify-between py-8">
+        <header className="flex justify-between items-center py-8">
           <h2 className="text-xl md:text-3xl font-semibold">
             Nuestros beneficios
           </h2>
-          <p className="w-2/4 font-semibold text-right text-sm text-gray-600">
+          <p className="w-2/4 lg:w-1/4 font-semibold text-right text-sm text-gray-600">
             Mejorá tu bienestar físico con herramientas prácticas y efectivas
           </p>
         </header>
