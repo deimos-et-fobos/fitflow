@@ -20,21 +20,21 @@ import MainLayout from "../components/layout/MainLayout";
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Rutas públicas */}
       <Route element={<MainLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        {/* Rutas públicas */}
+        <Route index element={<HomePage />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
 
         {/* Rutas privadas */}
         <Route element={<PrivateRoute />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/profile/edit" element={<EditProfileForm />} />
-          <Route path="/profile/activity" element={<ActivityHistory />} />
-          <Route path="/profile/health" element={<HealthData />} />
-          <Route path="/comunidad" element={<Comunidad />} />
-          <Route path="/initial-data" element={<InitialDataPage />} />
+          <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile/edit" element={<EditProfileForm />} />
+          <Route path="profile/activity" element={<ActivityHistory />} />
+          <Route path="profile/health" element={<HealthData />} />
+          <Route path="comunidad" element={<Comunidad />} />
+          <Route path="initial-data" element={<InitialDataPage />} />
         </Route>
 
         {/* Ruta para manejar URLs no encontradas */}

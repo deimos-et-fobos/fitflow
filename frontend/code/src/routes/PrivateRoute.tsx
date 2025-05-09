@@ -14,7 +14,11 @@ const PrivateRoute = () => {
   }
 
   // Si no está autenticado, redirigir al login
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default PrivateRoute;
