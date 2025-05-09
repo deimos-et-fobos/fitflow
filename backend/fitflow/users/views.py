@@ -16,7 +16,7 @@ class RegisterView(generics.CreateAPIView):
 
     @swagger_auto_schema(
         operation_description="Registro de un nuevo usuario",
-        security=[],  # No requiere autenticación
+        security=[],
         responses={
             400: openapi.Response(
                 description="Bad Request",
@@ -49,7 +49,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
     @swagger_auto_schema(
         operation_description="Login y obtención de tokens JWT",
-        security=[],  # No requiere autenticación
+        security=[],
         responses={
             200: openapi.Response(
                 description="Tokens JWT",
@@ -71,7 +71,32 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         }
     )
     def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+            user = CustomUser.objects.get(email=request.data.get('email'))
+            response = Response({
+                'access': serializer.validated_data['access'],
+                'refresh': serializer.validated_data['refresh'],
+                'user': {
+                    'id': user.id,
+                    'email': user.email,
+                    'name': user.name,
+                    'age': user.age,
+                    'sex': user.sex,
+                    'height_cm': user.height_cm,
+                    'weight_kg': user.weight_kg,
+                    'activity_level': user.activity_level,
+                    'dietary_restrictions': user.dietary_restrictions,
+                    'goal': user.goal
+                }
+            })
+            return response
+        except Exception as e:
+            return Response(
+                {"detail": "No active account found with the given credentials"},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
 class ProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]

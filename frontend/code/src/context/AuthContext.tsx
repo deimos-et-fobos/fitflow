@@ -75,9 +75,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (token) {
-      localStorage.setItem("auth_token", token);
+      localStorage.setItem("access_token", token);
     } else {
-      localStorage.removeItem("auth_token");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
     }
   }, [token]);
 
@@ -88,10 +89,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(user);
       const accessToken = localStorage.getItem("access_token");
       setToken(accessToken);
+      
       if (accessToken && user) {
         const hasInitialData = checkInitialData(user);
-        console.log("Datos iniciales después de login:", hasInitialData, user);
-        if (!hasInitialData && window.location.pathname !== "/initial-data") {
+        if (!hasInitialData) {
           navigate("/initial-data");
         } else {
           navigate("/dashboard");
@@ -120,7 +121,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   ): Promise<boolean> => {
     try {
       const result = await registerService(email, password, name);
-      return result.success;
+      if (result.success) {
+        // Limpiar cualquier token existente
+        setToken(null);
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        return true;
+      }
+      return false;
     } catch (error) {
       console.error("Error durante el registro:", error);
       return false;
