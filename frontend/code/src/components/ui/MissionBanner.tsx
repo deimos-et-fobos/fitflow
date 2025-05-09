@@ -1,0 +1,35 @@
+import Mission1 from "../../assets/mission1.webp";
+import Mission2 from "../../assets/mission2.webp";
+import Mission3 from "../../assets/mission3.webp";
+function MissionBanner() {
+  return (
+    <section className="mt-12 w-10/12 mx-auto bg-[#0c3a58] rounded-2xl p-8 px-10 shadow-lg">
+      <header className="mb-8">
+        <h2 className="text-white uppercase font-bold text-lg mb-2">
+          Nuestra Misión
+        </h2>
+        <p className="text-white text-2xl w-9/12 font-semibold">
+          FitFlow es el aliado confiable en el camino hacia una vida más
+          saludable. Hemos diseñado una plataforma inteligente que acompaña
+          tanto a principiantes como a atletas de alto rendimiento en la
+          conquista de sus metas. Con planes personalizados, evolución continua
+          y enfoque en el bienestar real, FitFlow está transformando el futuro
+          del entrenamiento.
+        </p>
+      </header>
+      <main className="grid grid-cols-3 gap-6">
+        <figure className="overflow-hidden rounded-xl shadow-2xl">
+          <img className="w-full h-full object-cover" src={Mission1} alt="" />
+        </figure>
+        <figure className="overflow-hidden rounded-xl shadow-2xl">
+          <img className="w-full h-full object-cover" src={Mission2} alt="" />
+        </figure>
+        <figure className="overflow-hidden rounded-xl shadow-2xl">
+          <img className="w-full h-full object-cover" src={Mission3} alt="" />
+        </figure>
+      </main>
+    </section>
+  );
+}
+
+export default MissionBanner;

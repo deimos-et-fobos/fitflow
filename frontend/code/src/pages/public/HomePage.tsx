@@ -6,6 +6,10 @@ import {
   ChartExesIcon,
   UtensilsIcon,
 } from "../../components/ui/Icons";
+import MissionBanner from "../../components/ui/MissionBanner";
+import SliderSection from "../../components/ui/SliderSection";
+import CTABanner from "../../components/ui/CTABanner";
+import Benefits from "../../components/ui/Benefits";
 
 const HomePage = () => {
   const { isAuthenticated } = useAuth();
@@ -50,12 +54,12 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-
-        <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
-          <div className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-purple-400 to-blue-600 opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"></div>
-        </div>
       </article>
 
+      <MissionBanner />
+      <SliderSection />
+      <CTABanner />
+      <Benefits />
       <article className="py-8 lg:pb-12">
         <div className="mx-auto max-w-3xl lg:text-center">
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
