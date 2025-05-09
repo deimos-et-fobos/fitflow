@@ -14,9 +14,9 @@ function SliderSection() {
   const swiperRef = useRef<SwiperType | null>(null);
 
   return (
-    <section className="flex gap-8 w-10/12 mx-auto py-28">
-      <article className="">
-        <h2 className="font-semibold text-2xl w-38">
+    <section className="flex gap-4 md:gap-8 w-10/12 mx-auto py-28">
+      <article>
+        <h2 className="font-semibold text-lg md:text-2xl md:w-38">
           Empieza a ver resultados
         </h2>
         <div className="flex mt-12 gap-4">
@@ -51,14 +51,15 @@ function SliderSection() {
         }}
         scrollbar={{ draggable: true }}
         breakpoints={{
+          0: {
+            slidesPerView: 1,
+          },
           640: {
             slidesPerView: 1,
           },
-
           768: {
             slidesPerView: 2,
           },
-
           1200: {
             slidesPerView: 3,
           },
@@ -70,7 +71,7 @@ function SliderSection() {
               <img className="w-full h-44 object-cover" src={Slider1} alt="" />
             </figure>
             <h2 className="text-lg mb-1 font-bold">Tu cambio empieza hoy</h2>
-            <p className="text-sm font-semibold text-gray-700">
+            <p className="text-sm font-semibold text-gray-600">
               Empezar es la parte más difícil, pero no estás solo. FitFlow te
               acompaña con planes reales, motivación constante y resultados que
               vas a poder ver y sentir.
@@ -85,7 +86,7 @@ function SliderSection() {
             <h2 className="text-lg mb-1 font-bold">
               Entrenamientos que se adaptan a vos
             </h2>
-            <p className="text-sm font-semibold text-gray-700">
+            <p className="text-sm font-semibold text-gray-600">
               Diseñamos entrenamientos según tu nivel y tu ritmo de vida, para
               que puedas avanzar paso a paso y ver resultados sostenibles.
             </p>
@@ -97,7 +98,7 @@ function SliderSection() {
               <img className="w-full h-44 object-cover" src={Slider3} alt="" />
             </figure>
             <h2 className="text-lg mb-1 font-bold">Comé bien, sentite mejor</h2>
-            <p className="text-sm font-semibold text-gray-700">
+            <p className="text-sm font-semibold text-gray-600">
               Nuestros planes nutricionales están pensados para que disfrutes la
               comida mientras cuidás tu energía, salud y bienestar general.
             </p>
@@ -111,7 +112,7 @@ function SliderSection() {
             <h2 className="text-lg mb-1 font-bold">
               Resultados visibles, bienestar real
             </h2>
-            <p className="text-sm font-semibold text-gray-700">
+            <p className="text-sm font-semibold text-gray-600">
               Fortalecé tu cuerpo, mejorá tu postura y descubrí cómo el
               movimiento constante transforma no solo tu físico, sino también tu
               estado de ánimo.
@@ -124,7 +125,7 @@ function SliderSection() {
               <img className="w-full h-44 object-cover" src={Slider5} alt="" />
             </figure>
             <h2 className="text-lg mb-1 font-bold"> Movete donde estés</h2>
-            <p className="text-sm font-semibold text-gray-700">
+            <p className="text-sm font-semibold text-gray-600">
               Entrená desde casa, el parque o donde quieras, con rutinas
               efectivas, flexibles y pensadas para que no pierdas constancia.
             </p>
@@ -136,7 +137,7 @@ function SliderSection() {
               <img className="w-full h-44 object-cover" src={Slider6} alt="" />
             </figure>
             <h2 className="text-lg mb-1 font-bold">Formá parte del cambio</h2>
-            <p className="text-sm font-semibold text-gray-700">
+            <p className="text-sm font-semibold text-gray-600">
               Sumate a una comunidad que entrena, se apoya y celebra los
               avances. En FitFlow no solo cambiás tu cuerpo, cambiás tu forma de
               vivir el bienestar.

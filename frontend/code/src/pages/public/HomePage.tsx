@@ -10,6 +10,10 @@ import MissionBanner from "../../components/ui/MissionBanner";
 import SliderSection from "../../components/ui/SliderSection";
 import CTABanner from "../../components/ui/CTABanner";
 import Benefits from "../../components/ui/Benefits";
+import FAQs from "../../components/ui/FAQs";
+import GridImage1 from "../../assets/grid1.webp";
+import GridImage2 from "../../assets/grid2.webp";
+import GridImage3 from "../../assets/grid3.webp";
 
 const HomePage = () => {
   const { isAuthenticated } = useAuth();
@@ -45,7 +49,7 @@ const HomePage = () => {
                   </Link>
                   <Link
                     to="/register"
-                    className="text-sm font-semibold leading-6 text-gray-900"
+                    className="rounded-md bg-black px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                   >
                     Registrarse <span aria-hidden="true">→</span>
                   </Link>
@@ -56,77 +60,100 @@ const HomePage = () => {
         </div>
       </article>
 
-      <MissionBanner />
+      <section className="w-10/12 mx-auto">
+        <article className="py-6">
+          <div className="mx-auto text-center lg:w-5/6">
+            <h2 className="mb-12 text-2xl font-semibold text-gray-700">
+              Descubre cómo nuestra plataforma transforma tus datos en acciones
+              saludables y efectivas.
+            </h2>
+          </div>
+
+          <article className="flex flex-col lg:flex-row gap-2 lg:gap-12">
+            <div className="grid grid-cols-2 gap-4 w-10/12 mx-auto">
+              <figure className="overflow-hidden h-fit rounded-2xl my-auto shadow-2xl">
+                <img className="w-full object-cover" src={GridImage1} alt="" />
+              </figure>
+              <aside className="flex flex-col gap-4">
+                <figure className="overflow-hidden rounded-2xl shadow-2xl">
+                  <img
+                    className="w-full object-cover"
+                    src={GridImage2}
+                    alt=""
+                  />
+                </figure>
+                <figure className="overflow-hidden rounded-2xl shadow-2xl">
+                  <img
+                    className="w-full object-cover"
+                    src={GridImage3}
+                    alt=""
+                  />
+                </figure>
+              </aside>
+            </div>
+            <div className="mx-auto mt-12">
+              <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none">
+                <div className="relative pl-16">
+                  <dt className="text-base font-semibold text-gray-900">
+                    <div className="absolute left-0 top-4 flex h-10 w-10 items-center justify-center rounded-lg bg-black">
+                      <BrainIcon />
+                    </div>
+                    Recomendaciones personalizadas con IA
+                  </dt>
+                  <dd className="text-base leading-7 text-gray-600">
+                    Analizamos tus métricas y preferencias para generar planes
+                    únicos y adaptados a ti.
+                  </dd>
+                </div>
+
+                <div className="relative pl-16">
+                  <dt className="text-base font-semibold text-gray-900">
+                    <div className="absolute left-0 top-4 flex h-10 w-10 items-center justify-center rounded-lg bg-black">
+                      <ChartExesIcon />
+                    </div>
+                    Seguimiento y ajuste continuo
+                  </dt>
+                  <dd className="text-base leading-7 text-gray-600">
+                    Cada dato nuevo optimiza tus rutinas y mejora la precisión
+                    de las sugerencias.
+                  </dd>
+                </div>
+
+                <div className="relative pl-16">
+                  <dt className="text-base font-semibold text-gray-900">
+                    <div className="absolute left-0 top-4 flex h-10 w-10 items-center justify-center rounded-lg bg-black">
+                      <BookCheckIcon />
+                    </div>
+                    Registro fácil de salud y hábitos
+                  </dt>
+                  <dd className="text-base leading-7 text-gray-600">
+                    Ingresa peso, altura, comidas favoritas y más desde una
+                    interfaz intuitiva.
+                  </dd>
+                </div>
+
+                <div className="relative pl-16">
+                  <dt className="text-base font-semibold text-gray-900">
+                    <div className="absolute left-0 top-4 flex h-10 w-10 items-center justify-center rounded-lg bg-black">
+                      <UtensilsIcon />
+                    </div>
+                    Planes de dieta y ejercicio integrados
+                  </dt>
+                  <dd className="text-base leading-7 text-gray-600">
+                    Obtén rutinas completas diseñadas para tus objetivos y
+                    estilo de vida.
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </article>
+        </article>
+      </section>
       <SliderSection />
-      <CTABanner />
       <Benefits />
-      <article className="py-8 lg:pb-12">
-        <div className="mx-auto max-w-3xl lg:text-center">
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Todo lo que necesitas para empezar
-          </h2>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-            Descubre cómo nuestra plataforma transforma tus datos en acciones
-            saludables y efectivas.
-          </p>
-        </div>
-
-        <div className="mx-auto mt-12 max-w-2xl lg:max-w-4xl">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-            <div className="relative pl-16">
-              <dt className="text-base font-semibold leading-7 text-gray-900">
-                <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
-                  <BrainIcon />
-                </div>
-                Recomendaciones personalizadas con IA
-              </dt>
-              <dd className="mt-2 text-base leading-7 text-gray-600">
-                Analizamos tus métricas y preferencias para generar planes
-                únicos y adaptados a ti.
-              </dd>
-            </div>
-
-            <div className="relative pl-16">
-              <dt className="text-base font-semibold leading-7 text-gray-900">
-                <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
-                  <ChartExesIcon />
-                </div>
-                Seguimiento y ajuste continuo
-              </dt>
-              <dd className="mt-2 text-base leading-7 text-gray-600">
-                Cada dato nuevo optimiza tus rutinas y mejora la precisión de
-                las sugerencias.
-              </dd>
-            </div>
-
-            <div className="relative pl-16">
-              <dt className="text-base font-semibold leading-7 text-gray-900">
-                <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
-                  <BookCheckIcon />
-                </div>
-                Registro fácil de salud y hábitos
-              </dt>
-              <dd className="mt-2 text-base leading-7 text-gray-600">
-                Ingresa peso, altura, comidas favoritas y más desde una interfaz
-                intuitiva.
-              </dd>
-            </div>
-
-            <div className="relative pl-16">
-              <dt className="text-base font-semibold leading-7 text-gray-900">
-                <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
-                  <UtensilsIcon />
-                </div>
-                Planes de dieta y ejercicio integrados
-              </dt>
-              <dd className="mt-2 text-base leading-7 text-gray-600">
-                Obtén rutinas completas diseñadas para tus objetivos y estilo de
-                vida.
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </article>
+      <FAQs />
+      <MissionBanner />
+      <CTABanner />
     </section>
   );
 };

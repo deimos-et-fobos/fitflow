@@ -23,9 +23,8 @@ const AppRoutes = () => {
       {/* Rutas públicas */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
-        {/* TODO descomentar esta parte */}
-        {/* <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} /> */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         {/* Rutas privadas */}
         <Route element={<PrivateRoute />}>

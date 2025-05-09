@@ -13,6 +13,7 @@ import {
   register as registerService,
   getProfile,
   updateProfile,
+  isAuthenticated,
 } from "../services/authService";
 
 interface AuthContextType {
@@ -33,7 +34,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem("access_token"));
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("access_token")
+  );
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -46,11 +49,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const userProfile = await getProfile(storedToken);
           setUser(userProfile);
           const hasInitialData = checkInitialData(userProfile);
-          console.log("Datos iniciales completos:", hasInitialData, userProfile);
+          console.log(
+            "Datos iniciales completos:",
+            hasInitialData,
+            userProfile
+          );
           if (!hasInitialData && window.location.pathname !== "/initial-data") {
             console.log("Redirigiendo a /initial-data");
             navigate("/initial-data");
-          } else if (hasInitialData && window.location.pathname === "/initial-data") {
+          } else if (
+            hasInitialData &&
+            window.location.pathname === "/initial-data"
+          ) {
             console.log("Datos iniciales completos, redirigiendo a /dashboard");
             navigate("/dashboard");
           }
@@ -62,8 +72,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           navigate("/login");
         }
       } else {
-        if (window.location.pathname !== "/login" && window.location.pathname !== "/register") {
-          navigate("/login");
+        if (
+          window.location.pathname !== "/login" &&
+          window.location.pathname !== "/register"
+        ) {
+          // TODO descomentar /login y eliminar /
+          // navigate("/login");
+          navigate("/");
         }
       }
       setIsLoading(false);
