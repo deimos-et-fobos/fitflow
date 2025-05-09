@@ -1,10 +1,9 @@
-from datetime import timedelta
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from drf_yasg.utils import swagger_auto_schema
 
 from plans.models import Plan
 from progress.models import DailyProgress, PlanChange
@@ -27,47 +26,46 @@ class FeedbackDetailView(generics.RetrieveUpdateAPIView):
         serializer.save()
 
         # Si actualiza el peso, actualizamos también el del usuario
-        if 'weight_kg' in request.data:
-            request.user.weight_kg = request.data['weight_kg']
+        weight_kg = request.data.get('weight_kg')
+        if weight_kg:
+            request.user.weight_kg = weight_kg
             request.user.save()
 
         return Response(serializer.data)
+
+    @swagger_auto_schema(auto_schema=None)
+    def put(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Método PUT no permitido. Usá PATCH para actualizaciones parciales."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
     
 
-class FeedbackCreateView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = DailyProgressSerializer
+# class FeedbackCreateView(generics.CreateAPIView):
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = DailyProgressSerializer
 
-    def create(self, request, *args, **kwargs):
-        user = request.user
-        data = request.data.copy()
+#     def create(self, request, *args, **kwargs):
+#         user = request.user
+#         data = request.data.copy()
 
-        date_str = data.get("date")
-        if not date_str:
-            return Response({"error": "Field 'date' is required."}, status=400)
-
-        try:
-            date_obj = timezone.datetime.strptime(date_str, "%Y-%m-%d").date()
-        except ValueError:
-            return Response({"error": "Formato de fecha inválido. Usa YYYY-MM-DD"}, status=400)
-
-        plan = Plan.objects.get(id=data.get('plan'), user=user).first()
-        if not plan:
-            return Response({"error": "No existe un plan para esa fecha."}, status=400)
+#         plan = Plan.objects.filter(id=data.get('plan'), user=user).first()
+#         if not plan:
+#             return Response({"error": "No existe un plan para esa fecha."}, status=400)
         
-        if DailyProgress.objects.filter(plan=plan).exists():
-            return Response({"error": "Ya existe feedback para esa fecha."}, status=400)
+#         if DailyProgress.objects.filter(plan=plan).exists():
+#             return Response({"error": "Ya existe feedback para esa fecha."}, status=400)
 
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user=user, date=date_obj)
+#         serializer = self.get_serializer(data=data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
 
-        # Si actualiza el peso, actualizamos también el del usuario
-        if 'weight_kg' in request.data:
-            request.user.weight_kg = request.data['weight_kg']
-            request.user.save()
+#         # Si actualiza el peso, actualizamos también el del usuario
+#         if 'weight_kg' in data:
+#             request.user.weight_kg = data['weight_kg']
+#             request.user.save()
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 
