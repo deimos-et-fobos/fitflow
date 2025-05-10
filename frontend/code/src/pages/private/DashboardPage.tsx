@@ -33,6 +33,27 @@ const CustomToast = ({ message, action }: CustomToastProps) => (
   </div>
 );
 
+const bulbIcon = (
+  <svg width="28" height="28" fill="none" stroke="#F1C40F" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3.5 6.5-.7.7-1.5 1.5-1.5 2.5v1h-2v-1c0-1-.8-1.8-1.5-2.5C6.5 13.5 5 11.5 5 9a7 7 0 0 1 7-7z" />
+  </svg>
+);
+
+const foodIcon = (
+  <svg width="28" height="28" fill="none" stroke="#2ECC71" strokeWidth="2" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" />
+    <path d="M8 16c0-2.2 1.8-4 4-4s4 1.8 4 4" />
+  </svg>
+);
+
+const dumbbellIcon = (
+  <svg width="28" height="28" fill="none" stroke="#5DADE2" strokeWidth="2" viewBox="0 0 24 24">
+    <rect x="2" y="10" width="20" height="4" rx="2" />
+    <rect x="6" y="6" width="2" height="12" rx="1" />
+    <rect x="16" y="6" width="2" height="12" rx="1" />
+  </svg>
+);
+
 const DashboardPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -69,6 +90,8 @@ const DashboardPage = () => {
       color: "bg-yellow-50",
     },
   ]);
+  const [recommendation, setRecommendation] = useState<any>(null);
+  const [loadingRecommendation, setLoadingRecommendation] = useState(true);
 
   const communityData = [
     {
@@ -161,6 +184,26 @@ const DashboardPage = () => {
     fetchCurrentPlan();
   }, []);
 
+  useEffect(() => {
+    const fetchRecommendation = async () => {
+      setLoadingRecommendation(true);
+      try {
+        // Intentar obtener el plan de hoy
+        let plan = await getCurrentPlan();
+        if (!plan) {
+          // Si no existe, crearlo
+          plan = await createPlan();
+        }
+        setRecommendation(plan);
+      } catch (error) {
+        toast.error("No se pudo obtener la recomendación de hoy");
+      } finally {
+        setLoadingRecommendation(false);
+      }
+    };
+    fetchRecommendation();
+  }, []);
+
   const handleGeneratePlan = async () => {
     setIsLoading(true);
     try {
@@ -235,6 +278,68 @@ const DashboardPage = () => {
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Recomendación de hoy */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 bg-gradient-to-r from-yellow-50 via-green-50 to-blue-50 rounded-2xl shadow-lg p-6 flex flex-col md:flex-row gap-6 items-center"
+        >
+          <div className="flex-shrink-0 flex flex-col items-center gap-2">
+            {bulbIcon}
+            <span className="text-lg font-bold text-[#F1C40F]">Recomendación de hoy</span>
+          </div>
+          {loadingRecommendation ? (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#2ECC71]"></div>
+            </div>
+          ) : recommendation ? (
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Rutina */}
+              <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+                {dumbbellIcon}
+                <h3 className="font-semibold text-[#5DADE2] mt-2 mb-1">Rutina sugerida</h3>
+                <p className="text-sm text-gray-700 mb-2">Duración: {recommendation.workouts?.duration || "-"}</p>
+                <ul className="text-xs text-gray-600 list-disc pl-4 mb-2">
+                  {recommendation.workouts?.exercises && Object.entries(recommendation.workouts.exercises).map(([name, reps]: any) => (
+                    <li key={name}><span className="font-medium text-[#2C3E50]">{name}:</span> {reps}</li>
+                  ))}
+                </ul>
+                <span className="text-xs text-gray-500">{recommendation.workouts?.warmup}</span>
+              </div>
+              {/* Comidas */}
+              <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+                {foodIcon}
+                <h3 className="font-semibold text-[#2ECC71] mt-2 mb-1">Comidas sugeridas</h3>
+                <ul className="text-xs text-gray-600 list-disc pl-4 mb-2">
+                  {recommendation.meals && Object.entries(recommendation.meals).map(([meal, times]: any) => (
+                    <li key={meal} className="mb-1">
+                      <span className="font-medium text-[#2C3E50] capitalize">{meal}:</span>
+                      <ul className="pl-3 list-square">
+                        {Object.entries(times).map(([time, foods]: any) => (
+                          <li key={time} className="mb-1">
+                            <span className="text-[#5DADE2]">{time}</span> - {foods.join(", ")}
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {/* Tips */}
+              <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+                <span className="text-2xl">💡</span>
+                <h3 className="font-semibold text-[#F1C40F] mt-2 mb-1">Tips de hoy</h3>
+                <ul className="text-xs text-gray-600 list-disc pl-4">
+                  {recommendation.tips && recommendation.tips.map((tip: string, idx: number) => (
+                    <li key={idx}>{tip}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <div className="flex-1 text-center text-gray-500">No hay recomendación disponible.</div>
+          )}
+        </motion.div>
         {/* Botón para generar plan */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 flex justify-center">
           <button
