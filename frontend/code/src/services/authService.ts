@@ -2,8 +2,6 @@ import axios from 'axios';
 import { User } from "../types/user.types";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
-console.log(API_URL);
-
 
 // Eliminado AUTH_TOKEN_KEY porque no se usa
 const USER_DATA_KEY = "user_data";

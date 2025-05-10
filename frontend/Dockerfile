@@ -1,11 +1,11 @@
-FROM node:18
+FROM node:23
 
 WORKDIR /app
 
-COPY frontend/code/package*.json ./code/
+COPY code/package*.json ./code/
 RUN npm install --prefix ./code
 
-COPY frontend/code/ ./code/
+COPY code/ ./code/
 
 EXPOSE 5173
 
