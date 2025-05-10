@@ -5,7 +5,7 @@ echo "Iniciando backend..."
 python manage.py makemigrations
 python manage.py collectstatic --noinput
 python manage.py migrate
-gunicorn fitflow.wsgi:application --bind 127.0.0.1:8000 &
+gunicorn fitflow.wsgi:application --bind 0.0.0.0:8000 &
 
 # Iniciar frontend en primer plano
 echo "Iniciando frontend..."
