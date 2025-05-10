@@ -1,4 +1,4 @@
-# 🏋️ FitFlow Backend
+# 💪 FitFlow Backend
 
 Backend de **FitFlow**, una plataforma construida con Django y Django REST Framework para gestionar usuarios, objetivos de salud y configuraciones personalizadas.
 
@@ -6,7 +6,7 @@ Backend de **FitFlow**, una plataforma construida con Django y Django REST Frame
 
 ## ⚙️ Tecnologías
 
-- Python 3.10+
+- Python 3.12+
 - Django 4+
 - Django REST Framework
 - PostgreSQL
@@ -17,19 +17,18 @@ Backend de **FitFlow**, una plataforma construida con Django y Django REST Frame
 
 ## 🚀 Cómo levantar el proyecto
 
-### 1. Clona el repositorio y cambiar a la rama *development*
+### 1. Clona el repositorio 
 
 ```bash
-git clone https://github.com/deimos-et-fobos/fitflow
+git clone https://github.com/deimos-et-fobos/fitflow.git
 cd fitflow/backend/
-git checkout development
 ```
 
 ### 2. Crea y activa un entorno virtual
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
+source venv/bin/activate  
 ```
 
 ### 3. Instala las dependencias
@@ -53,6 +52,10 @@ POSTGRES_USER=
 POSTGRES_PASSWORD=
 POSTGRES_HOST=
 POSTGRES_PORT=
+OPENAI_API_KEY1=
+OPENAI_API_KEY2=
+OPENAI_API_REGION=
+OPENAI_API_URL=
 ```
 
 ### 5. Ejecutá las migraciones
@@ -62,6 +65,7 @@ Asegurate de estar en la raíz del proyecto, donde se encuentra ubicado el archi
 ```bash
 python manage.py makemigrations
 python manage.py migrate
+python manage.py collectstatic --noinput
 ```
 
 ### 6. Crea un superusuario
