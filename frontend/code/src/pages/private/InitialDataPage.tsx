@@ -87,130 +87,132 @@ const InitialDataPage = () => {
   if (!user) return <div>Cargando...</div>;
 
   return (
-    <div className="min-h-screen bg-[#eaf4fb] flex flex-col">
-      {/* Header fijo */}
-      <header className="w-full bg-[#eaf4fb] border-b border-blue-200 py-3 flex items-center px-4 fixed top-0 left-0 z-10">
-        <img src="/logo.png" alt="FitFlow" className="h-8 mr-2" />
-        <span className="text-xl font-bold text-blue-600">FitFlow</span>
-      </header>
-      {/* Espaciado para el header */}
-      <div className="h-14" />
-      {/* Tarjeta central animada */}
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, type: "spring" }}
-        className="mx-auto w-full max-w-md bg-white rounded-3xl shadow-2xl p-7 mt-6 relative"
-      >
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">
-          Ingresa tus datos iniciales
-        </h2>
-        <p className="text-center text-gray-500 mb-6 text-sm">
-          Personaliza tu experiencia en FitFlow
-        </p>
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* Edad */}
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="relative">
-            <label htmlFor="age" className="block text-sm font-medium leading-6 text-gray-900 flex items-center gap-1">
-              <FaBirthdayCake className="text-blue-400" /> Edad
-              <MdInfoOutline className="ml-1 text-gray-400 cursor-pointer" onMouseEnter={() => showTooltip('Tu edad nos ayuda a personalizar tus recomendaciones.')} onMouseLeave={hideTooltip} />
-            </label>
-            {tooltip && <span className="absolute left-32 top-0 bg-gray-800 text-white text-xs rounded px-2 py-1 z-20 animate-fade-in">{tooltip}</span>}
-            <input
-              id="age"
-              name="age"
-              type="number"
-              required
-              value={formData.age}
-              onChange={handleChange}
-              className="block w-full rounded-xl border border-gray-300 px-10 py-2 shadow focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all placeholder:text-gray-400 mt-1 focus:shadow-lg outline-none"
-              placeholder="Ej: 25"
-              min={1}
-            />
-            <FaBirthdayCake className="absolute left-3 top-9 text-gray-300 pointer-events-none" />
-          </motion.div>
-          {/* Separador */}
-          <div className="border-t border-blue-100 my-1" />
-          {/* Altura */}
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 }} className="relative">
-            <label htmlFor="height_cm" className="block text-sm font-medium leading-6 text-gray-900 flex items-center gap-1">
-              <FaRulerVertical className="text-blue-400" /> Altura (cm)
-              <MdInfoOutline className="ml-1 text-gray-400 cursor-pointer" onMouseEnter={() => showTooltip('La altura es clave para calcular tu IMC y planes personalizados.')} onMouseLeave={hideTooltip} />
-            </label>
-            {tooltip && <span className="absolute left-36 top-0 bg-gray-800 text-white text-xs rounded px-2 py-1 z-20 animate-fade-in">{tooltip}</span>}
-            <input
-              id="height_cm"
-              name="height_cm"
-              type="number"
-              required
-              value={formData.height_cm}
-              onChange={handleChange}
-              className="block w-full rounded-xl border border-gray-300 px-10 py-2 shadow focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all placeholder:text-gray-400 mt-1 focus:shadow-lg outline-none"
-              placeholder="Ej: 170"
-              min={1}
-            />
-            <FaRulerVertical className="absolute left-3 top-9 text-gray-300 pointer-events-none" />
-          </motion.div>
-          <div className="border-t border-blue-100 my-1" />
-          {/* Peso */}
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="relative">
-            <label htmlFor="weight_kg" className="block text-sm font-medium leading-6 text-gray-900 flex items-center gap-1">
-              <FaWeight className="text-blue-400" /> Peso (kg)
-              <MdInfoOutline className="ml-1 text-gray-400 cursor-pointer" onMouseEnter={() => showTooltip('El peso es necesario para calcular tu progreso y recomendaciones.')} onMouseLeave={hideTooltip} />
-            </label>
-            {tooltip && <span className="absolute left-36 top-0 bg-gray-800 text-white text-xs rounded px-2 py-1 z-20 animate-fade-in">{tooltip}</span>}
-            <input
-              id="weight_kg"
-              name="weight_kg"
-              type="number"
-              required
-              value={formData.weight_kg}
-              onChange={handleChange}
-              className="block w-full rounded-xl border border-gray-300 px-10 py-2 shadow focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all placeholder:text-gray-400 mt-1 focus:shadow-lg outline-none"
-              placeholder="Ej: 65"
-              min={1}
-            />
-            <FaWeight className="absolute left-3 top-9 text-gray-300 pointer-events-none" />
-          </motion.div>
-          <div className="border-t border-blue-100 my-1" />
-          {/* Género */}
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }} className="relative">
-            <label htmlFor="sex" className="block text-sm font-medium leading-6 text-gray-900 flex items-center gap-1">
-              <FaVenusMars className="text-blue-400" /> Género
-              <MdInfoOutline className="ml-1 text-gray-400 cursor-pointer" onMouseEnter={() => showTooltip('El género ayuda a personalizar tus planes y métricas.')} onMouseLeave={hideTooltip} />
-            </label>
-            {tooltip && <span className="absolute left-32 top-0 bg-gray-800 text-white text-xs rounded px-2 py-1 z-20 animate-fade-in">{tooltip}</span>}
-            <div className="relative">
-              <select
-                id="sex"
-                name="sex"
-                value={formData.sex}
-                onChange={handleChange}
-                className="block w-full rounded-xl border border-gray-300 px-10 py-2 shadow focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all mt-1 focus:shadow-lg appearance-none outline-none bg-white"
-              >
-                <option value="">Selecciona una opción</option>
-                <option value="M">Masculino</option>
-                <option value="F">Femenino</option>
-              </select>
-              <FaVenusMars className="absolute left-3 top-3.5 text-gray-300 pointer-events-none" />
-              <span className="absolute right-3 top-4 text-gray-400 pointer-events-none">▼</span>
+    <div className="min-h-screen flex flex-col lg:flex-row bg-gradient-to-br from-blue-100 via-purple-100 to-white">
+      {/* Lado izquierdo con imagen motivacional */}
+      <div className="hidden lg:flex lg:w-1/2 items-center justify-center relative overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=900&q=80"
+          alt="Motivación Fitness"
+          className="w-full h-full object-cover scale-105 brightness-90"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-purple-900/80"></div>
+        <div className="absolute z-10 left-0 top-0 w-full h-full flex flex-col items-center justify-center px-12">
+          <h1 className="text-5xl font-extrabold text-white drop-shadow-lg mb-6 text-center">¡Transforma tu vida!</h1>
+          <p className="text-xl text-gray-200 mb-8 text-center max-w-md">Registra tus datos y comienza tu viaje hacia una vida más saludable y activa con FitFlow.</p>
+          <ul className="space-y-4 w-full max-w-xs">
+            <li className="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-xl p-4 text-white shadow-lg">
+              <FaBullseye className="text-3xl text-yellow-300" />
+              <span>Metas personalizadas</span>
+            </li>
+            <li className="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-xl p-4 text-white shadow-lg">
+              <FaRunning className="text-3xl text-green-300" />
+              <span>Seguimiento inteligente</span>
+            </li>
+            <li className="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-xl p-4 text-white shadow-lg">
+              <FaLeaf className="text-3xl text-lime-300" />
+              <span>Recomendaciones saludables</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      {/* Contenido principal */}
+      <div className="flex-1 flex flex-col min-h-screen justify-center items-center">
+        {/* Header minimalista */}
+        <header className="w-full flex items-center justify-center py-6">
+          <img src="/logo.png" alt="FitFlow" className="h-12 mr-3" />
+          <span className="text-3xl font-extrabold text-blue-600 tracking-tight">FitFlow</span>
+        </header>
+        {/* Tarjeta central animada */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, type: "spring" }}
+          className="w-full max-w-lg bg-white/80 rounded-3xl shadow-2xl p-10 mt-2 mb-8 backdrop-blur-md border border-blue-100"
+        >
+          <h2 className="text-3xl font-bold text-center text-blue-900 mb-2">Datos iniciales</h2>
+          <p className="text-center text-gray-600 mb-8 text-lg">Personaliza tu experiencia en FitFlow</p>
+          <form className="space-y-7" onSubmit={handleSubmit}>
+            {/* Edad y Género */}
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="flex-1">
+                <label htmlFor="age" className="block text-sm font-semibold text-blue-700 mb-2 flex items-center gap-2">
+                  <FaBirthdayCake className="text-xl text-blue-400" /> Edad
+                </label>
+                <input
+                  id="age"
+                  name="age"
+                  type="number"
+                  required
+                  value={formData.age}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-gray-300 py-3 px-4 text-gray-900 bg-white/70 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300 shadow-sm"
+                  placeholder="Ej: 25"
+                  min={1}
+                />
+              </div>
+              <div className="flex-1">
+                <label htmlFor="sex" className="block text-sm font-semibold text-blue-700 mb-2 flex items-center gap-2">
+                  <FaVenusMars className="text-xl text-pink-400" /> Género
+                </label>
+                <select
+                  id="sex"
+                  name="sex"
+                  value={formData.sex}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-gray-300 py-3 px-4 text-gray-900 bg-white/70 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300 shadow-sm"
+                >
+                  <option value="">Selecciona una opción</option>
+                  <option value="M">Masculino</option>
+                  <option value="F">Femenino</option>
+                </select>
+              </div>
             </div>
-          </motion.div>
-          <div className="border-t border-blue-100 my-1" />
-          {/* Nivel de actividad física */}
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="relative">
-            <label htmlFor="activity_level" className="block text-sm font-medium leading-6 text-gray-900 flex items-center gap-1">
-              <FaRunning className="text-blue-400" /> Nivel de actividad física
-              <MdInfoOutline className="ml-1 text-gray-400 cursor-pointer" onMouseEnter={() => showTooltip('Selecciona tu nivel de actividad para mejores recomendaciones.')} onMouseLeave={hideTooltip} />
-            </label>
-            {tooltip && <span className="absolute left-56 top-0 bg-gray-800 text-white text-xs rounded px-2 py-1 z-20 animate-fade-in">{tooltip}</span>}
-            <div className="relative">
+            {/* Altura y Peso */}
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="flex-1">
+                <label htmlFor="height_cm" className="block text-sm font-semibold text-blue-700 mb-2 flex items-center gap-2">
+                  <FaRulerVertical className="text-xl text-purple-400" /> Altura (cm)
+                </label>
+                <input
+                  id="height_cm"
+                  name="height_cm"
+                  type="number"
+                  required
+                  value={formData.height_cm}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-gray-300 py-3 px-4 text-gray-900 bg-white/70 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 shadow-sm"
+                  placeholder="Ej: 170"
+                  min={1}
+                />
+              </div>
+              <div className="flex-1">
+                <label htmlFor="weight_kg" className="block text-sm font-semibold text-blue-700 mb-2 flex items-center gap-2">
+                  <FaWeight className="text-xl text-green-400" /> Peso (kg)
+                </label>
+                <input
+                  id="weight_kg"
+                  name="weight_kg"
+                  type="number"
+                  required
+                  value={formData.weight_kg}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-gray-300 py-3 px-4 text-gray-900 bg-white/70 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all duration-300 shadow-sm"
+                  placeholder="Ej: 65"
+                  min={1}
+                />
+              </div>
+            </div>
+            {/* Nivel de actividad física */}
+            <div>
+              <label htmlFor="activity_level" className="block text-sm font-semibold text-blue-700 mb-2 flex items-center gap-2">
+                <FaRunning className="text-xl text-orange-400" /> Nivel de actividad física
+              </label>
               <select
                 id="activity_level"
                 name="activity_level"
                 value={formData.activity_level}
                 onChange={handleChange}
-                className="block w-full rounded-xl border border-gray-300 px-10 py-2 shadow focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all mt-1 focus:shadow-lg appearance-none outline-none bg-white"
+                className="w-full rounded-xl border border-gray-300 py-3 px-4 text-gray-900 bg-white/70 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-300 shadow-sm"
               >
                 <option value="">Selecciona una opción</option>
                 <option value="sedentary">Sedentario</option>
@@ -219,91 +221,80 @@ const InitialDataPage = () => {
                 <option value="active">Activo</option>
                 <option value="very_active">Muy activo</option>
               </select>
-              <FaRunning className="absolute left-3 top-3.5 text-gray-300 pointer-events-none" />
-              <span className="absolute right-3 top-4 text-gray-400 pointer-events-none">▼</span>
             </div>
-          </motion.div>
-          <div className="border-t border-blue-100 my-1" />
-          {/* Restricciones dietéticas */}
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.35 }} className="relative">
-            <label htmlFor="dietary_restrictions" className="block text-sm font-medium leading-6 text-gray-900 flex items-center gap-1">
-              <FaLeaf className="text-blue-400" /> Restricciones dietéticas
-              <MdInfoOutline className="ml-1 text-gray-400 cursor-pointer" onMouseEnter={() => showTooltip('Selecciona si tienes alguna restricción alimentaria.')} onMouseLeave={hideTooltip} />
-            </label>
-            {tooltip && <span className="absolute left-56 top-0 bg-gray-800 text-white text-xs rounded px-2 py-1 z-20 animate-fade-in">{tooltip}</span>}
-            <div className="relative">
-              <select
-                id="dietary_restrictions"
-                name="dietary_restrictions"
-                multiple
-                value={formData.dietary_restrictions}
-                onChange={handleChange}
-                className="block w-full rounded-xl border border-gray-300 px-10 py-2 shadow focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all mt-1 focus:shadow-lg appearance-none outline-none bg-white"
+            {/* Restricciones dietéticas y Objetivo */}
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="flex-1">
+                <label htmlFor="dietary_restrictions" className="block text-sm font-semibold text-blue-700 mb-2 flex items-center gap-2">
+                  <FaLeaf className="text-xl text-lime-500" /> Restricciones dietéticas
+                </label>
+                <select
+                  id="dietary_restrictions"
+                  name="dietary_restrictions"
+                  multiple
+                  value={formData.dietary_restrictions}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-gray-300 py-3 px-4 text-gray-900 bg-white/70 focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent transition-all duration-300 shadow-sm"
+                >
+                  <option value="vegan">Vegana</option>
+                  <option value="vegetarian">Vegetariana</option>
+                  <option value="gluten_free">Sin gluten</option>
+                  <option value="lactose_free">Sin lactosa</option>
+                  <option value="low_carb">Baja en carbohidratos</option>
+                  <option value="keto">Keto</option>
+                  <option value="paleo">Paleo</option>
+                  <option value="halal">Halal</option>
+                  <option value="kosher">Kosher</option>
+                  <option value="nut_free">Sin frutos secos</option>
+                </select>
+              </div>
+              <div className="flex-1">
+                <label htmlFor="goal" className="block text-sm font-semibold text-blue-700 mb-2 flex items-center gap-2">
+                  <FaBullseye className="text-xl text-yellow-400" /> Objetivo
+                </label>
+                <select
+                  id="goal"
+                  name="goal"
+                  value={formData.goal}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-gray-300 py-3 px-4 text-gray-900 bg-white/70 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300 shadow-sm"
+                >
+                  <option value="">Selecciona una opción</option>
+                  <option value="lose_weight">Perder peso</option>
+                  <option value="gain_muscle">Ganar músculo</option>
+                  <option value="maintain_weight">Mantener peso</option>
+                  <option value="improve_endurance">Mejorar resistencia</option>
+                  <option value="increase_flexibility">Aumentar flexibilidad</option>
+                  <option value="boost_energy">Aumentar energía</option>
+                  <option value="reduce_stress">Reducir estrés</option>
+                </select>
+              </div>
+            </div>
+            {/* Error */}
+            {error && <div className="text-red-500 text-center text-sm bg-red-50 border border-red-200 rounded-xl py-2 px-4">{error}</div>}
+            {/* Botón */}
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-4 px-4 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-lg shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition-all duration-300 transform hover:-translate-y-0.5"
               >
-                <option value="vegan">Vegana</option>
-                <option value="vegetarian">Vegetariana</option>
-                <option value="gluten_free">Sin gluten</option>
-                <option value="lactose_free">Sin lactosa</option>
-                <option value="low_carb">Baja en carbohidratos</option>
-                <option value="keto">Keto</option>
-                <option value="paleo">Paleo</option>
-                <option value="halal">Halal</option>
-                <option value="kosher">Kosher</option>
-                <option value="nut_free">Sin frutos secos</option>
-              </select>
-              <FaLeaf className="absolute left-3 top-3.5 text-gray-300 pointer-events-none" />
-              <span className="absolute right-3 top-4 text-gray-400 pointer-events-none">▼</span>
+                {isLoading ? (
+                  <span className="flex items-center justify-center">
+                    <AiOutlineLoading3Quarters className="animate-spin mr-2" />
+                    Guardando...
+                  </span>
+                ) : (
+                  "Guardar datos"
+                )}
+              </button>
             </div>
-          </motion.div>
-          <div className="border-t border-blue-100 my-1" />
-          {/* Objetivo */}
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }} className="relative">
-            <label htmlFor="goal" className="block text-sm font-medium leading-6 text-gray-900 flex items-center gap-1">
-              <FaBullseye className="text-blue-400" /> Objetivo
-              <MdInfoOutline className="ml-1 text-gray-400 cursor-pointer" onMouseEnter={() => showTooltip('Define tu objetivo principal para personalizar tu plan.')} onMouseLeave={hideTooltip} />
-            </label>
-            {tooltip && <span className="absolute left-32 top-0 bg-gray-800 text-white text-xs rounded px-2 py-1 z-20 animate-fade-in">{tooltip}</span>}
-            <div className="relative">
-              <select
-                id="goal"
-                name="goal"
-                value={formData.goal}
-                onChange={handleChange}
-                className="block w-full rounded-xl border border-gray-300 px-10 py-2 shadow focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all mt-1 focus:shadow-lg appearance-none outline-none bg-white"
-              >
-                <option value="">Selecciona una opción</option>
-                <option value="lose_weight">Perder peso</option>
-                <option value="gain_muscle">Ganar músculo</option>
-                <option value="maintain_weight">Mantener peso</option>
-                <option value="improve_endurance">Mejorar resistencia</option>
-                <option value="increase_flexibility">Aumentar flexibilidad</option>
-                <option value="boost_energy">Aumentar energía</option>
-                <option value="reduce_stress">Reducir estrés</option>
-              </select>
-              <FaBullseye className="absolute left-3 top-3.5 text-gray-300 pointer-events-none" />
-              <span className="absolute right-3 top-4 text-gray-400 pointer-events-none">▼</span>
-            </div>
-          </motion.div>
-          {/* Error */}
-          {error && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-500 text-sm">{error}</motion.p>}
-          {/* Botón */}
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="flex w-full justify-center items-center gap-2 rounded-xl bg-blue-600 px-3 py-2 text-base font-semibold leading-6 text-white shadow-xl hover:bg-blue-700 active:scale-95 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 mt-2 relative"
-            >
-              {isLoading ? (
-                <AiOutlineLoading3Quarters className="animate-spin text-lg" />
-              ) : null}
-              {isLoading ? "Guardando..." : "Guardar datos"}
-            </button>
-          </motion.div>
-        </form>
-      </motion.div>
-      {/* Footer de advertencia */}
-      <div className="mt-6 mb-2 px-6 text-xs text-center text-yellow-600">
-        <span className="font-semibold">Recuerda:</span> Los datos que ingreses serán usados para personalizar tu experiencia. Consulta siempre a un profesional de la salud ante cualquier duda.
+          </form>
+        </motion.div>
+        {/* Footer de advertencia */}
+        <div className="mb-4 px-6 text-xs text-center text-yellow-600">
+          <span className="font-semibold">Recuerda:</span> Los datos que ingreses serán usados para personalizar tu experiencia. Consulta siempre a un profesional de la salud ante cualquier duda.
+        </div>
       </div>
     </div>
   );
