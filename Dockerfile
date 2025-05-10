@@ -24,7 +24,7 @@ COPY ./backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./backend/fitflow /app
-COPY ./backend/fitflow/.env /app
+# COPY ./backend/fitflow/.env /app
 
 # -----------------------------------
 # Etapa 3: Frontend - Node.js
