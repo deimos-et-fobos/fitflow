@@ -208,6 +208,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'https://fitflow-production.up.railway.app:5173',   
 ]
 
 CORS_ALLOW_METHODS = [
@@ -227,12 +228,16 @@ CORS_ALLOW_HEADERS = [
 ]
 
 # Configuraciones de seguridad para producción
-# if ENVIRONMENT == 'production':
-#     # SECURE_SSL_REDIRECT = True  # Redirigir HTTP a HTTPS
-#     # SESSION_COOKIE_SECURE = True  # Cookies solo por HTTPS
-#     # CSRF_COOKIE_SECURE = True  # Cookies CSRF solo por HTTPS
-#     SECURE_BROWSER_XSS_FILTER = True  # Protección contra XSS
-#     SECURE_CONTENT_TYPE_NOSNIFF = True  # Evitar que el navegador interprete mal los tipos de contenido
-#     SECURE_HSTS_SECONDS = 31536000  # HSTS por 1 año
-#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-#     SECURE_HSTS_PRELOAD = True
+if ENVIRONMENT == 'production' or DEPLOY == 'True':
+    CSRF_TRUSTED_ORIGINS = [
+        "https://fitflow-production.up.railway.app",
+    ]
+    CORS_ALLOW_CREDENTIALS = True
+    SESSION_COOKIE_SECURE = True  # Cookies solo por HTTPS
+    CSRF_COOKIE_SECURE = True  # Cookies CSRF solo por HTTPS
+    SECURE_SSL_REDIRECT = True  # Redirigir HTTP a HTTPS
+    SECURE_BROWSER_XSS_FILTER = True  # Protección contra XSS
+    SECURE_CONTENT_TYPE_NOSNIFF = True  # Evitar que el navegador interprete mal los tipos de contenido
+    SECURE_HSTS_SECONDS = 31536000  # HSTS por 1 año
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
