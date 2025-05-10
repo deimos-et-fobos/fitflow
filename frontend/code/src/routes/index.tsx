@@ -14,6 +14,7 @@ import EditProfileForm from "../pages/private/EditProfileForm";
 import ActivityHistory from "../pages/private/ActivityHistory";
 import HealthData from "../pages/private/HealthData";
 import Comunidad from "../pages/private/Comunidad";
+import SettingsPage from "../pages/private/SettingsPage";
 
 import MainLayout from "../components/layout/MainLayout";
 
@@ -33,6 +34,7 @@ const AppRoutes = () => {
           <Route path="profile/edit" element={<EditProfileForm />} />
           <Route path="profile/activity" element={<ActivityHistory />} />
           <Route path="profile/health" element={<HealthData />} />
+          <Route path="profile/settings" element={<SettingsPage />} />
           <Route path="comunidad" element={<Comunidad />} />
           <Route path="initial-data" element={<InitialDataPage />} />
         </Route>

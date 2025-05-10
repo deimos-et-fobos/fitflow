@@ -4,6 +4,8 @@ import Avatar from "../../components/ui/Avatar";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { getRecentProgress } from "../../services/planService";
+import { getProfile } from "../../services/authService";
+import { toast } from "react-toastify";
 
 // Íconos SVG
 const ClockIcon = (
@@ -108,7 +110,7 @@ const fadeInCascade = {
 };
 
 const ProfilePage = () => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState({
     workoutsCompleted: 0,
@@ -116,10 +118,16 @@ const ProfilePage = () => {
     totalCalories: 0,
     streak: 0
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchUserData = async () => {
       try {
+        // Obtener datos actualizados del perfil
+        const updatedUser = await getProfile(localStorage.getItem('access_token') || '');
+        setUser(updatedUser);
+
+        // Obtener estadísticas
         const progress = await getRecentProgress();
         const stats = progress.reduce((acc: any, curr: any) => {
           if (curr.workout_done) acc.workoutsCompleted++;
@@ -127,13 +135,51 @@ const ProfilePage = () => {
           if (curr.calories_burned) acc.totalCalories += parseInt(curr.calories_burned);
           return acc;
         }, { workoutsCompleted: 0, mealsFollowed: 0, totalCalories: 0, streak: 0 });
+
+        // Calcular racha
+        let currentStreak = 0;
+        let lastDate = new Date();
+        for (const record of progress) {
+          const recordDate = new Date(record.date);
+          const diffDays = Math.floor((lastDate.getTime() - recordDate.getTime()) / (1000 * 60 * 60 * 24));
+          
+          if (diffDays === 1 && (record.workout_done || record.meals_followed)) {
+            currentStreak++;
+            lastDate = recordDate;
+          } else {
+            break;
+          }
+        }
+        stats.streak = currentStreak;
+
         setStats(stats);
       } catch (error) {
-        console.error("Error al cargar estadísticas:", error);
+        console.error("Error al cargar datos del perfil:", error);
+        toast.error("Error al cargar los datos del perfil");
+      } finally {
+        setIsLoading(false);
       }
     };
-    fetchStats();
-  }, []);
+
+    fetchUserData();
+  }, [setUser]);
+
+  // Redirigir al login si no hay usuario
+  useEffect(() => {
+    if (!user && !isLoading) {
+      navigate("/login");
+    }
+  }, [user, isLoading, navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2ECC71]"></div>
+      </div>
+    );
+  }
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -149,7 +195,7 @@ const ProfilePage = () => {
               <div className="flex items-center space-x-4">
                 <div className="relative">
                   <Avatar
-                    src={user?.photoUrl || "/assets/user-placeholder.png"}
+                    src={user.photoUrl || "/assets/user-placeholder.png"}
                     size={80}
                     className="border-4 border-white"
                   />
@@ -161,8 +207,8 @@ const ProfilePage = () => {
                   </div>
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold">{user?.name || "Usuario"}</h1>
-                  <p className="text-white/80">{user?.email}</p>
+                  <h1 className="text-2xl font-bold">{user.name}</h1>
+                  <p className="text-white/80">{user.email}</p>
                 </div>
               </div>
               <button
@@ -332,10 +378,10 @@ const ProfilePage = () => {
             >
               <h3 className="text-lg font-semibold text-[#2C3E50] mb-4">Progreso General</h3>
               <div className="flex items-center justify-center">
-                <ProgressCircle progress={75} size={40} />
+                <ProgressCircle progress={calculateOverallProgress(stats)} size={40} />
               </div>
               <p className="text-center text-gray-500 mt-4">
-                ¡Sigue así! Estás cerca de alcanzar tus objetivos
+                {getProgressMessage(calculateOverallProgress(stats))}
               </p>
             </motion.div>
           </div>
@@ -343,6 +389,21 @@ const ProfilePage = () => {
       </div>
     </div>
   );
+};
+
+// Función auxiliar para calcular el progreso general
+const calculateOverallProgress = (stats: any): number => {
+  const totalActivities = stats.workoutsCompleted + stats.mealsFollowed;
+  const maxActivities = 14; // 7 días * 2 actividades (entrenamiento + comida)
+  return Math.min(Math.round((totalActivities / maxActivities) * 100), 100);
+};
+
+// Función auxiliar para obtener mensaje de progreso
+const getProgressMessage = (progress: number): string => {
+  if (progress >= 90) return "¡Excelente trabajo! Estás superando tus objetivos";
+  if (progress >= 70) return "¡Sigue así! Estás cerca de alcanzar tus objetivos";
+  if (progress >= 50) return "Vas por buen camino, pero aún hay espacio para mejorar";
+  return "Comienza a registrar tus actividades para ver tu progreso";
 };
 
 export default ProfilePage;

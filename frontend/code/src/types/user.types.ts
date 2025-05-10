@@ -2,6 +2,7 @@ export interface User {
   id: number;
   email: string;
   name: string;
+  photoUrl?: string;
   age?: number | null;
   sex?: string | null; // Añadido para coincidir con el backend
   height_cm?: number | null;

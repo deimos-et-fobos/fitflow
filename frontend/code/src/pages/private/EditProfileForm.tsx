@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { updateProfile } from "../../services/authService";
+import { toast } from "react-toastify";
 
 const EditProfileForm = () => {
   const { user, setUser } = useAuth();
@@ -9,6 +11,10 @@ const EditProfileForm = () => {
     name: user?.name || "",
     email: user?.email || "",
     photoUrl: user?.photoUrl || "",
+    age: user?.age || "",
+    sex: user?.sex || "",
+    height_cm: user?.height_cm || "",
+    weight_kg: user?.weight_kg || "",
   });
   const [preview, setPreview] = useState(user?.photoUrl || "");
   const [success, setSuccess] = useState("");
@@ -16,7 +22,7 @@ const EditProfileForm = () => {
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
   };
@@ -33,25 +39,38 @@ const EditProfileForm = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSuccess("");
     setError("");
     setLoading(true);
+
     if (!formData.name.trim() || !formData.email.trim()) {
       setError("Todos los campos son obligatorios.");
       setLoading(false);
       return;
     }
-    // Simular actualización global
-    setTimeout(() => {
-      if (user) {
-        setUser({ id: user.id, ...formData });
+
+    try {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        throw new Error("No hay token de autenticación");
       }
+
+      const updatedUser = await updateProfile(token, formData);
+      setUser(updatedUser);
       setSuccess("¡Perfil actualizado correctamente!");
-      setLoading(false);
+      
       setTimeout(() => navigate("/profile"), 1200);
-    }, 1200);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? `Error al guardar los datos: ${err.message}`
+          : "Ocurrió un error al guardar los datos."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -120,6 +139,64 @@ const EditProfileForm = () => {
               placeholder="tu@email.com"
               autoComplete="off"
             />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="age" className="block text-sm font-medium text-[#2C3E50] mb-1">Edad</label>
+              <input
+                type="number"
+                id="age"
+                name="age"
+                value={formData.age}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#2ECC71] focus:border-transparent text-[#2C3E50] bg-[#F9FAFB]"
+                placeholder="Edad"
+                min="0"
+              />
+            </div>
+            <div>
+              <label htmlFor="sex" className="block text-sm font-medium text-[#2C3E50] mb-1">Sexo</label>
+              <select
+                id="sex"
+                name="sex"
+                value={formData.sex}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#2ECC71] focus:border-transparent text-[#2C3E50] bg-[#F9FAFB]"
+              >
+                <option value="">Selecciona</option>
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="height_cm" className="block text-sm font-medium text-[#2C3E50] mb-1">Altura (cm)</label>
+              <input
+                type="number"
+                id="height_cm"
+                name="height_cm"
+                value={formData.height_cm}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#2ECC71] focus:border-transparent text-[#2C3E50] bg-[#F9FAFB]"
+                placeholder="Altura en cm"
+                min="0"
+              />
+            </div>
+            <div>
+              <label htmlFor="weight_kg" className="block text-sm font-medium text-[#2C3E50] mb-1">Peso (kg)</label>
+              <input
+                type="number"
+                id="weight_kg"
+                name="weight_kg"
+                value={formData.weight_kg}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#2ECC71] focus:border-transparent text-[#2C3E50] bg-[#F9FAFB]"
+                placeholder="Peso en kg"
+                min="0"
+              />
+            </div>
           </div>
           {error && <div className="text-[#E74C3C] text-sm font-medium text-center">{error}</div>}
           {success && <div className="text-[#2ECC71] text-sm font-medium text-center">{success}</div>}
