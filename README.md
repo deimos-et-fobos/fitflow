@@ -153,6 +153,7 @@ Visita: [http://localhost:3000](http://localhost:3000)
 | **José Ortega**     | Frontend Developer | [@joseorteha](https://github.com/joseorteha)               | [LinkedIn](https://www.linkedin.com/in/jose-orteg4)               |
 | **Ricardo Márquez** | Backend Developer  | [@cronosmorfeo](https://github.com/cronosmorfeo)           | [LinkedIn](https://www.linkedin.com/in/ricardo-marquez-turiello/) |
 | **Andrey Rojas**    | Backend Developer  | [@cronosmorfeo](https://github.com/cronosmorfeo)           | [LinkedIn](https://www.linkedin.com/in/andreyrojasdelgado/)       |
+| **Luz**     | UX/UI Designer     | [@WGutierrez89](https://github.com/WGutierrez89)           | -                                                                 |
 
 ---
 
