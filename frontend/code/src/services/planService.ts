@@ -2,6 +2,10 @@ import axios from 'axios';
 import { Plan } from '../types/user.types';
 
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
+console.log(API_URL);
+console.log(API_URL);
+console.log(API_URL);
+console.log(API_URL);
 
 export const createPlan = async (): Promise<Plan> => {
     try {

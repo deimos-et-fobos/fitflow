@@ -205,11 +205,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuración de CORS
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'https://fitflow-production.up.railway.app:5173',   
-]
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173,http://0.0.0.0:5173').split(',') 
 
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -229,9 +225,7 @@ CORS_ALLOW_HEADERS = [
 
 # Configuraciones de seguridad para producción
 if ENVIRONMENT == 'production' or DEPLOY == 'True':
-    CSRF_TRUSTED_ORIGINS = [
-        "https://fitflow-production.up.railway.app",
-    ]
+    CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
     CORS_ALLOW_CREDENTIALS = True
     SESSION_COOKIE_SECURE = True  # Cookies solo por HTTPS
     CSRF_COOKIE_SECURE = True  # Cookies CSRF solo por HTTPS

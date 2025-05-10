@@ -2,9 +2,11 @@ version: "3.9"
 
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    build: ./backend
+    image: deimosetfobos/fitflow-backend_latest
     container_name: django_backend
     command: >
       sh -c "python manage.py makemigrations &&
@@ -29,9 +31,11 @@ services:
     #     condition: service_healthy
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    # build:
+    #   context: ./frontend
+    #   dockerfile: Dockerfile
+    build: ./frontend
+    image: deimosetfobos/fitflow-frontend_latest
     container_name: frontend
     volumes:
       - ./frontend/code:/app/code
