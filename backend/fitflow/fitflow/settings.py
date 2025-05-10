@@ -225,7 +225,8 @@ CORS_ALLOW_HEADERS = [
 
 # Configuraciones de seguridad para producción
 if ENVIRONMENT == 'production' or DEPLOY == 'True':
-    CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+    if os.getenv('CSRF_TRUSTED_ORIGINS'):
+        CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
     CORS_ALLOW_CREDENTIALS = True
     SESSION_COOKIE_SECURE = True  # Cookies solo por HTTPS
     CSRF_COOKIE_SECURE = True  # Cookies CSRF solo por HTTPS
