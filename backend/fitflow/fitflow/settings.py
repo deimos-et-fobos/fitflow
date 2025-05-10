@@ -151,7 +151,8 @@ WSGI_APPLICATION = 'fitflow.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-if ENVIRONMENT == 'production':
+DEPLOY = os.getenv('DEPLOY', False)
+if ENVIRONMENT == 'production' or DEPLOY == 'True':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
