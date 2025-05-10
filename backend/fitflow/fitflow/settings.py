@@ -166,7 +166,7 @@ else:
     POSTGRES_REMOTE = os.getenv('POSTGRES_REMOTE', False)
     if POSTGRES_REMOTE == 'True':
         POSTGRES_URL = os.getenv('POSTGRES_URL', 'URL not provided!')
-        print(f'Using remote database URL: {POSTGRES_URL}')
+        print(f'Using remote database URL')
         DATABASES = {
             'default': dj_database_url.config(default=POSTGRES_URL)
         }
@@ -179,7 +179,6 @@ else:
             }
         }
 
-print(DATABASES)
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
